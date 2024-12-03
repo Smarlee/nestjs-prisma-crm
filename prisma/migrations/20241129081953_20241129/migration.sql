@@ -63,6 +63,7 @@ CREATE TABLE `sys_dept` (
     `updateBy` VARCHAR(64) NULL DEFAULT '',
     `updateTime` DATETIME(3) NULL,
 
+    INDEX `sys_dept_parentId_fkey`(`parentId`),
     PRIMARY KEY (`deptId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -175,6 +176,7 @@ CREATE TABLE `sys_menu` (
     `updateTime` DATETIME(3) NULL,
     `remark` VARCHAR(500) NULL DEFAULT '',
 
+    INDEX `sys_menu_parentId_fkey`(`parentId`),
     PRIMARY KEY (`menuId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -190,6 +192,7 @@ CREATE TABLE `sys_notice` (
     `updateBy` VARCHAR(64) NULL DEFAULT '',
     `updateTime` DATETIME(3) NULL,
     `remark` VARCHAR(255) NULL,
+    `warningLevel` VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (`noticeId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -282,6 +285,29 @@ CREATE TABLE `sys_user` (
     UNIQUE INDEX `sys_user_userName_key`(`userName`),
     INDEX `sys_user_deptId_fkey`(`deptId`),
     PRIMARY KEY (`userId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `sys_book_menu` (
+    `menuId` INTEGER NOT NULL AUTO_INCREMENT,
+    `menuName` VARCHAR(50) NOT NULL,
+    `createTime` DATETIME(3) NULL,
+    `remark` VARCHAR(500) NULL,
+    `updateTime` DATETIME(3) NULL,
+
+    PRIMARY KEY (`menuId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `sys_book_list` (
+    `bookId` INTEGER NOT NULL AUTO_INCREMENT,
+    `bookName` VARCHAR(50) NOT NULL,
+    `menuType` INTEGER NULL,
+    `remark` VARCHAR(500) NULL,
+    `createTime` DATETIME(3) NULL,
+    `updateTime` DATETIME(3) NULL,
+
+    PRIMARY KEY (`bookId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable

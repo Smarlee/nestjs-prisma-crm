@@ -306,3 +306,25 @@ model SysUser {
   @@index([deptId], map: "sys_user_deptId_fkey")
   @@map("sys_user")
 }
+
+// 图书分类
+model SysBookMenu {
+  menuId      Int       @id @default(autoincrement())
+  menuName    String    @db.VarChar(50)
+  createTime  DateTime?
+  remark      String?   @db.VarChar(500)
+  updateTime  DateTime?
+
+  @@map("sys_book_menu")
+}
+// 图书列表
+model SysBookList {
+  bookId      Int       @id @default(autoincrement())
+  bookName    String    @db.VarChar(50)
+  menuType    String    @db.Char(1)
+  remark      String?   @db.VarChar(500)
+  createTime  DateTime?
+  updateTime  DateTime?
+
+  @@map("sys_book_list")
+}
