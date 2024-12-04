@@ -36,18 +36,18 @@ import { StringToArrPipe } from 'src/common/pipes/stringtoarr.pipe';
 export class SysBookController {
   constructor(private readonly SysBookService: SysBookService) { }
 
-  // /* 新增 */
-  // @Post()
-  // @RepeatSubmit()
-  // @Log({
-  //   title: '图书类别管理',
-  //   businessType: BusinessTypeEnum.insert,
-  //   isSaveRequestData: false,
-  // })
-  // @RequiresPermissions('system:bookList:add')
-  // async add(@Body(CreateMessagePipe) addSysNoticeDto: AddSysNoticeDto) {
-  //   await this.SysBookService.add(addSysNoticeDto);
-  // }
+  /* 新增 */
+  @Post()
+  @RepeatSubmit()
+  @Log({
+    title: '图书管理',
+    businessType: BusinessTypeEnum.insert,
+    isSaveRequestData: false,
+  })
+  @RequiresPermissions('system:bookList:add')
+  async add(@Body(CreateMessagePipe) addSysNoticeDto: AddSysNoticeDto) {
+    await this.SysBookService.add(addSysNoticeDto);
+  }
 
   /* 分页查询 */
   @Get('list')
@@ -57,38 +57,38 @@ export class SysBookController {
   }
 
   /* 通过id查询 */
-  // @Get(':noticeId')
-  // @RequiresPermissions('system:bookList:query')
-  // async oneByNoticeId(@Param('noticeId') noticeId: number) {
-  //   const notice = await this.sysNoticeService.oneByNoticeId(noticeId);
-  //   return DataObj.create(notice);
-  // }
+  @Get(':bookId')
+  @RequiresPermissions('system:bookList:query')
+  async oneByBookId(@Param('bookId') bookId: number) {
+    const notice = await this.SysBookService.oneBybookId(bookId);
+    return DataObj.create(notice);
+  }
 
   // /* 更新 */
-  // @Put()
-  // @RepeatSubmit()
-  // @RequiresPermissions('system:bookList:edit')
-  // @Log({
-  //   title: '公告管理',
-  //   businessType: BusinessTypeEnum.update,
-  //   isSaveRequestData: false,
-  // })
-  // async uplate(
-  //   @Body(UpdateMessagePipe) updateSysNoticeDto: UpdateSysNoticeDto,
-  // ) {
-  //   await this.sysNoticeService.update(updateSysNoticeDto);
-  // }
+  @Put()
+  @RepeatSubmit()
+  @RequiresPermissions('system:bookList:edit')
+  @Log({
+    title: '图书管理',
+    businessType: BusinessTypeEnum.update,
+    isSaveRequestData: false,
+  })
+  async uplate(
+    @Body(UpdateMessagePipe) updateSysNoticeDto: UpdateSysNoticeDto,
+  ) {
+    await this.SysBookService.update(updateSysNoticeDto);
+  }
 
-  // /* 删除 */
-  // @Delete(':noticeIds')
-  // @RequiresPermissions('system:bookList:remove')
-  // @Log({
-  //   title: '公告管理',
-  //   businessType: BusinessTypeEnum.delete,
-  // })
-  // async delete(
-  //   @Param('noticeIds', new StringToArrPipe()) noticeIdArr: number[],
-  // ) {
-  //   await this.sysNoticeService.delete(noticeIdArr);
-  // }
+  /* 删除 */
+  @Delete(':bookIds')
+  @RequiresPermissions('system:bookList:remove')
+  @Log({
+    title: '公告管理',
+    businessType: BusinessTypeEnum.delete,
+  })
+  async delete(
+    @Param('bookIds', new StringToArrPipe()) bookIdArr: number[],
+  ) {
+    await this.SysBookService.delete(bookIdArr);
+  }
 }

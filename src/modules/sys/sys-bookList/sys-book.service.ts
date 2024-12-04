@@ -27,13 +27,14 @@ export class SysBookService {
   /* 分页查询 */
   async list(GetSysBookListDto: GetSysBookListDto) {
     const { bookName, menuType } = GetSysBookListDto;
+    console.log('type0', menuType)
     const { total, rows } =
       await this.customPrisma.client.sysBookList.findAndCount({
         where: {
-          // menuType,
-          // bookName: {
-          //   contains: bookName,
-          // },
+          menuType,
+          bookName: {
+            contains: bookName,
+          },
           // createBy: {
           //   contains: createBy,
           // },
@@ -48,57 +49,55 @@ export class SysBookService {
   }
 
   // /* 新增 */
-  // async add(addSysNoticeDto: AddSysNoticeDto) {
-  //   const data = Object.assign({}, addSysNoticeDto, {
-  //     noticeContent: Buffer.from(addSysNoticeDto.noticeContent, 'utf8'),
-  //   });
-  //   return await this.prisma.sysNotice.create({
-  //     data,
-  //   });
-  // }
+  async add(addSysNoticeDto: AddSysNoticeDto) {
+    const data = Object.assign({}, addSysNoticeDto,);
+    return await this.prisma.sysBookList.create({
+      data,
+    });
+  }
 
   // /* 通过id查询 */
-  // async oneByNoticeId(noticeId: number) {
-  //   const notice = await this.prisma.sysNotice.findUnique({
-  //     where: {
-  //       noticeId,
-  //     },
-  //   });
-  //   return Object.assign({}, notice, {
-  //     noticeContent: notice.noticeContent.toString(),
-  //   });
-  // }
+  async oneBybookId(bookId: number) {
+    const notice = await this.prisma.sysBookList.findUnique({
+      where: {
+        bookId,
+      },
+    });
+    return Object.assign({}, notice, {
+      bookName: notice.bookName.toString(),
+    });
+  }
 
   // /* 更新 */
-  // async update(updateSysNoticeDto: UpdateSysNoticeDto) {
-  //   return await this.prisma.$transaction(async (prisma) => {
-  //     const { noticeId } = updateSysNoticeDto;
-  //     const notice = await prisma.sysNotice.findUnique({
-  //       where: {
-  //         noticeId,
-  //       },
-  //     });
-  //     if (!notice) throw new ApiException('该记录不存在，请重新查询后操作。');
-  //     const data = Object.assign({}, updateSysNoticeDto, {
-  //       noticeContent: Buffer.from(updateSysNoticeDto.noticeContent, 'utf8'),
-  //     });
-  //     return await prisma.sysNotice.update({
-  //       data,
-  //       where: {
-  //         noticeId,
-  //       },
-  //     });
-  //   });
-  // }
+  async update(updateSysNoticeDto: UpdateSysNoticeDto) {
+    return await this.prisma.$transaction(async (prisma) => {
+      const { bookId } = updateSysNoticeDto;
+      const notice = await prisma.sysBookList.findUnique({
+        where: {
+          bookId,
+        },
+      });
+      if (!notice) throw new ApiException('该记录不存在，请重新查询后操作。');
+      const data = Object.assign({}, updateSysNoticeDto
 
-  // /* 删除公告 */
-  // async delete(noticeIdArr: number[]) {
-  //   await this.prisma.sysNotice.deleteMany({
-  //     where: {
-  //       noticeId: {
-  //         in: noticeIdArr,
-  //       },
-  //     },
-  //   });
-  // }
+      );
+      return await prisma.sysBookList.update({
+        data,
+        where: {
+          bookId,
+        },
+      });
+    });
+  }
+
+  /* 删除公告 */
+  async delete(bookIdArr: number[]) {
+    await this.prisma.sysBookList.deleteMany({
+      where: {
+        bookId: {
+          in: bookIdArr,
+        },
+      },
+    });
+  }
 }

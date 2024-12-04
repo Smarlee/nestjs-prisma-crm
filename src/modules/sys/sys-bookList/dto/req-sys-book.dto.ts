@@ -18,16 +18,7 @@ export class GetSysBookListDto extends PaginationDto {
   @IsString()
   bookName: string;
 
-  // @IsOptional()
-  // @IsString()
-  // warningLevel: string;
 
-  // /* 创建人 */
-  // @IsOptional()
-  // @IsString()
-  // createBy: string;
-
-  /* 图书类型 */
   @IsOptional()
   @IsString()
   menuType: string;

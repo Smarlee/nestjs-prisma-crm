@@ -18,9 +18,9 @@ model SysWeb {
   sidebarLogo  Boolean?
   dynamicTitle Boolean?
   createBy     String    @unique @db.VarChar(64)
-  createTime   DateTime?
+  createTime   DateTime? @db.DateTime(0)
   updateBy     String?   @default("") @db.VarChar(64)
-  updateTime   DateTime?
+  updateTime   DateTime? @db.DateTime(0)
 
   @@map("sys_web")
 }
@@ -28,9 +28,9 @@ model SysWeb {
 model SysTable {
   tableId         String    @db.VarChar(100)
   createBy        String    @db.VarChar(64)
-  createTime      DateTime?
+  createTime      DateTime? @db.DateTime(0)
   updateBy        String?   @default("") @db.VarChar(64)
-  updateTime      DateTime?
+  updateTime      DateTime? @db.DateTime(0)
   tableJsonConfig String?   @db.Text
 
   @@id([tableId, createBy])
@@ -44,9 +44,9 @@ model SysConfig {
   configValue String?   @default("") @db.VarChar(500)
   configType  String?   @default("N") @db.Char(1)
   createBy    String?   @default("") @db.VarChar(64)
-  createTime  DateTime?
+  createTime  DateTime? @db.DateTime(0)
   updateBy    String?   @default("") @db.VarChar(64)
-  updateTime  DateTime?
+  updateTime  DateTime? @db.DateTime(0)
   remark      String?   @db.VarChar(500)
 
   @@map("sys_config")
@@ -65,9 +65,9 @@ model SysDept {
   status     String?   @default("0") @db.Char(1)
   delFlag    String?   @default("0") @db.Char(1)
   createBy   String?   @default("") @db.VarChar(64)
-  createTime DateTime?
+  createTime DateTime? @db.DateTime(0)
   updateBy   String?   @default("") @db.VarChar(64)
-  updateTime DateTime?
+  updateTime DateTime? @db.DateTime(0)
   parentDept SysDept?  @relation("deptParentDept", fields: [parentId], references: [deptId])
   childDept  SysDept[] @relation("deptParentDept")
   users      SysUser[]
@@ -89,9 +89,9 @@ model SysDictData {
   isDefault   String?      @default("N") @db.Char(1)
   status      String?      @default("0") @db.Char(1)
   createBy    String?      @default("") @db.VarChar(64)
-  createTime  DateTime?
+  createTime  DateTime?    @db.DateTime(0)
   updateBy    String?      @default("") @db.VarChar(64)
-  updateTime  DateTime?
+  updateTime  DateTime?    @db.DateTime(0)
   remark      String?      @db.VarChar(500)
   dictTypeObj SysDictType? @relation(fields: [dictType], references: [dictType])
 
@@ -106,9 +106,9 @@ model SysDictType {
   dictType   String?       @unique(map: "dictType") @default("") @db.VarChar(100)
   status     String?       @default("0") @db.Char(1)
   createBy   String?       @default("") @db.VarChar(64)
-  createTime DateTime?
+  createTime DateTime?     @db.DateTime(0)
   updateBy   String?       @default("") @db.VarChar(64)
-  updateTime DateTime?
+  updateTime DateTime?     @db.DateTime(0)
   remark     String?       @db.VarChar(500)
   dictData   SysDictData[]
 
@@ -126,9 +126,9 @@ model SysJob {
   concurrent     String?   @default("1") @db.Char(1)
   status         String?   @default("0") @db.Char(1)
   createBy       String?   @default("") @db.VarChar(64)
-  createTime     DateTime?
+  createTime     DateTime? @db.DateTime(0)
   updateBy       String?   @default("") @db.VarChar(64)
-  updateTime     DateTime?
+  updateTime     DateTime? @db.DateTime(0)
   remark         String?   @default("") @db.VarChar(500)
 
   @@map("sys_job")
@@ -143,7 +143,7 @@ model SysJobLog {
   jobMessage    String?   @db.VarChar(500)
   status        String?   @default("0") @db.Char(1)
   exceptionInfo String?   @default("") @db.VarChar(2000)
-  createTime    DateTime?
+  createTime    DateTime? @db.DateTime(0)
 
   @@map("sys_job_log")
 }
@@ -158,7 +158,7 @@ model SysLoginInfor {
   os            String?   @default("") @db.VarChar(50)
   status        String?   @default("0") @db.Char(1)
   msg           String?   @default("") @db.VarChar(255)
-  loginTime     DateTime?
+  loginTime     DateTime? @db.DateTime(0)
 
   @@index([loginTime], map: "idxSysLogininforLt")
   @@index([status], map: "idxSysLogininforS")
@@ -182,9 +182,9 @@ model SysMenu {
   perms      String?   @db.VarChar(100)
   icon       String?   @default("#") @db.VarChar(100)
   createBy   String?   @default("") @db.VarChar(64)
-  createTime DateTime?
+  createTime DateTime? @db.DateTime(0)
   updateBy   String?   @default("") @db.VarChar(64)
-  updateTime DateTime?
+  updateTime DateTime? @db.DateTime(0)
   remark     String?   @default("") @db.VarChar(500)
   parentMenu SysMenu?  @relation("menuParentMenu", fields: [parentId], references: [menuId])
   childMenu  SysMenu[] @relation("menuParentMenu")
@@ -202,11 +202,11 @@ model SysNotice {
   noticeContent Bytes?
   status        String?   @default("0") @db.Char(1)
   createBy      String?   @default("") @db.VarChar(64)
-  createTime    DateTime?
+  createTime    DateTime? @db.DateTime(0)
   updateBy      String?   @default("") @db.VarChar(64)
-  updateTime    DateTime?
+  updateTime    DateTime? @db.DateTime(0)
   remark        String?   @db.VarChar(255)
-  warningLevel  String    @db.VarChar(50)
+  warningLevel  String?   @db.VarChar(255)
 
   @@map("sys_notice")
 }
@@ -228,7 +228,7 @@ model SysOperLog {
   jsonResult    String?   @db.Text
   status        String?   @default("0") @db.Char(1)
   errorMsg      String?   @db.Text
-  operTime      DateTime?
+  operTime      DateTime? @db.DateTime(0)
   costTime      Int?      @default(0)
 
   @@index([businessType], map: "idxSysOperLogBt")
@@ -245,9 +245,9 @@ model SysPost {
   postSort   Int
   status     String    @db.Char(1)
   createBy   String?   @default("") @db.VarChar(64)
-  createTime DateTime?
+  createTime DateTime? @db.DateTime(0)
   updateBy   String?   @default("") @db.VarChar(64)
-  updateTime DateTime?
+  updateTime DateTime? @db.DateTime(0)
   remark     String?   @db.VarChar(500)
   users      SysUser[] @relation("sys_post_to_sys_user")
 
@@ -258,7 +258,7 @@ model SysPost {
 model SysRole {
   roleId            Int       @id @default(autoincrement())
   createBy          String?   @default("") @db.VarChar(64)
-  createTime        DateTime?
+  createTime        DateTime? @db.DateTime(0)
   dataScope         String?   @default("4") @db.Char(4)
   delFlag           String?   @default("0") @db.Char(1)
   deptCheckStrictly Boolean?  @default(true)
@@ -269,7 +269,7 @@ model SysRole {
   roleSort          Int
   status            String    @db.Char(1)
   updateBy          String?   @default("") @db.VarChar(64)
-  updateTime        DateTime?
+  updateTime        DateTime? @db.DateTime(0)
   depts             SysDept[] @relation("sys_dept_to_sys_role")
   menus             SysMenu[] @relation("sys_menu_to_sys_role")
   users             SysUser[] @relation("sys_role_to_sys_user")
@@ -283,11 +283,11 @@ model SysUser {
   userId      Int       @id @default(autoincrement())
   avatar      String?   @default("") @db.VarChar(100)
   createBy    String?   @default("") @db.VarChar(64)
-  createTime  DateTime?
+  createTime  DateTime? @db.DateTime(0)
   delFlag     String?   @default("0") @db.Char(1)
   deptId      Int?
   email       String?   @default("") @db.VarChar(50)
-  loginDate   DateTime?
+  loginDate   DateTime? @db.DateTime(0)
   loginIp     String?   @default("") @db.VarChar(128)
   nickName    String    @db.VarChar(30)
   password    String?   @default("") @db.VarChar(100)
@@ -296,7 +296,7 @@ model SysUser {
   sex         String?   @default("0") @db.Char(1)
   status      String?   @default("0") @db.Char(1)
   updateBy    String?   @default("") @db.VarChar(64)
-  updateTime  DateTime?
+  updateTime  DateTime? @db.DateTime(0)
   userName    String    @unique @db.VarChar(30)
   userType    String?   @default("00") @db.VarChar(2)
   dept        SysDept?  @relation(fields: [deptId], references: [deptId])
@@ -307,24 +307,25 @@ model SysUser {
   @@map("sys_user")
 }
 
-// 图书分类
 model SysBookMenu {
-  menuId      Int       @id @default(autoincrement())
-  menuName    String    @db.VarChar(50)
-  createTime  DateTime?
-  remark      String?   @db.VarChar(500)
-  updateTime  DateTime?
+  menuId     Int       @id @default(autoincrement())
+  menuName   String    @db.VarChar(50)
+  createTime DateTime?
+  remark     String?   @db.VarChar(500)
+  updateTime DateTime?
 
   @@map("sys_book_menu")
 }
-// 图书列表
+
 model SysBookList {
-  bookId      Int       @id @default(autoincrement())
-  bookName    String    @db.VarChar(50)
-  menuType    String    @db.Char(1)
-  remark      String?   @db.VarChar(500)
-  createTime  DateTime?
-  updateTime  DateTime?
+  bookId     Int       @id @default(autoincrement())
+  bookName   String    @db.VarChar(50)
+  menuType   String    @db.Char(1)
+  remark     String?   @db.VarChar(500)
+  createTime DateTime?
+  updateTime DateTime?
+  createBy   String?   @db.VarChar(64)
+  updateBy   String?   @db.VarChar(64)
 
   @@map("sys_book_list")
 }

@@ -27,6 +27,8 @@ export class SysNoticeService {
   /* 分页查询 */
   async list(getSysNoticeListDto: GetSysNoticeListDto) {
     const { noticeTitle, createBy, noticeType } = getSysNoticeListDto;
+    console.log('type1', noticeType)
+
     const { total, rows } =
       await this.customPrisma.client.sysNotice.findAndCount({
         where: {
