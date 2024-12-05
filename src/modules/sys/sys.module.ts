@@ -19,6 +19,7 @@ import { SysRoleModule } from './sys-role/sys-role.module';
 import { SysTableModule } from './sys-table/sys-table.module';
 import { SysWebModule } from './sys-web/sys-web.module';
 import { SysBookModule } from './sys-bookList/sys-book.module';
+import { SysPlanModule } from './sys-read-plan/sys-plan.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { SysBookModule } from './sys-bookList/sys-book.module';
     SysRoleModule,
     SysTableModule,
     SysWebModule,
-    SysBookModule
+    SysBookModule,
+    SysPlanModule
   ],
 })
 export class SysModule {}

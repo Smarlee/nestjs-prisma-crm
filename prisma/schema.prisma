@@ -279,7 +279,7 @@ model SysRole {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// 用户表
-model SysUser {
+model SysUser { // 
   userId      Int       @id @default(autoincrement())
   avatar      String?   @default("") @db.VarChar(100)
   createBy    String?   @default("") @db.VarChar(64)
@@ -299,22 +299,29 @@ model SysUser {
   updateTime  DateTime? @db.DateTime(0)
   userName    String    @unique @db.VarChar(30)
   userType    String?   @default("00") @db.VarChar(2)
-  dept        SysDept?  @relation(fields: [deptId], references: [deptId])
+  dept        SysDept?  @relation(fields: [deptId], references: [deptId])  // 加人员
   posts       SysPost[] @relation("sys_post_to_sys_user")
   roles       SysRole[] @relation("sys_role_to_sys_user")
-
+  usersPlan      SysReadPlan?
   @@index([deptId], map: "sys_user_deptId_fkey")
   @@map("sys_user")
 }
 
-model SysBookMenu {
-  menuId     Int       @id @default(autoincrement())
-  menuName   String    @db.VarChar(50)
+model SysReadPlan {
+  planId     Int       @id @default(autoincrement())
+  planName   String    @db.VarChar(50)
   createTime DateTime?
   remark     String?   @db.VarChar(500)
   updateTime DateTime?
+  createBy   String?   @db.VarChar(64)
+  updateBy   String?   @db.VarChar(64)
+  startTime  DateTime?
+  endTime    DateTime?
+  userId     Int?
+  usersPlan      SysUser[] @relation(fields: [userId], references: [userId])
 
-  @@map("sys_book_menu")
+  @@index([userId], map: "sys_read_plan_userId_fkey")
+  @@map("sys_read_plan")
 }
 
 model SysBookList {
@@ -325,6 +332,7 @@ model SysBookList {
   createTime DateTime?
   updateTime DateTime?
   createBy   String?   @db.VarChar(64)
+  price      Decimal?  @db.Decimal(10, 2)
   updateBy   String?   @db.VarChar(64)
 
   @@map("sys_book_list")

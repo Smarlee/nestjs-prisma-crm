@@ -10,30 +10,32 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { DataBaseDto } from 'src/common/dto/data-base.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-
+import { Transform, Type } from 'class-transformer';
 /* 分页查询 */
 export class GetSysBookListDto extends PaginationDto {
   /* 广告标题 */
   @IsOptional()
   @IsString()
-  bookName: string;
+  planName: string;
 
-
-  @IsOptional()
-  @IsString()
-  menuType: string;
 }
 
 /* 新增 */
 export class AddSysNoticeDto extends DataBaseDto {
   @IsString()
-  bookName: string;
+  planName: string;
+
+  // @IsString()
+  // price: string;
+  @IsNumber()
+  @Type()
+  userId: number;
 
   @IsString()
-  price: string;
+  startTime?: Date | string;
 
   @IsString()
-  menuType: string;
+  endTime?: Date | string;
 
   // @IsOptional()
   // @IsString()
@@ -46,5 +48,5 @@ export class AddSysNoticeDto extends DataBaseDto {
 /* 编辑 */
 export class UpdateSysNoticeDto extends AddSysNoticeDto {
   @IsNumber()
-  bookId: number;
+  planId: number;
 }
