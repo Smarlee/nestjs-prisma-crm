@@ -9,9 +9,9 @@
  */
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  AddSysNoticeDto,
-  GetSysBookListDto,
-  UpdateSysNoticeDto,
+  AddSysPlanDto,
+  GetSysPlanDto,
+  UpdateSysPlanDto,
 } from './dto/req-sys-plan.dto';
 import { CustomPrismaService, PrismaService } from 'nestjs-prisma';
 import { ExtendedPrismaClient } from 'src/shared/prisma/prisma.extension';
@@ -25,19 +25,26 @@ export class SysBookService {
     private readonly customPrisma: CustomPrismaService<ExtendedPrismaClient>,
   ) { }
   /* 分页查询 */
-  async list(GetSysBookListDto: GetSysBookListDto) {
-    const { planName, } = GetSysBookListDto;
+  async list(GetSysPlanDto: GetSysPlanDto) {
+    const { userId } = GetSysPlanDto;
+    const contains = userId ? `,${userId},` : undefined;
+    const { planName, } = GetSysPlanDto;
 
     const { total, rows } =
       await this.customPrisma.client.sysReadPlan.findAndCount({
+        include: {
+          users: true
+        },
         where: {
-          // menuType,
+          AND: {
+
           planName: {
             contains: planName,
           },
           // createBy: {
           //   contains: createBy,
           // },
+          }
         },
       });
     const newrows = rows.map((item) => {
@@ -49,10 +56,18 @@ export class SysBookService {
   }
 
   // /* 新增 */
-  async add(addSysNoticeDto: AddSysNoticeDto) {
-    const data = Object.assign({}, addSysNoticeDto,);
+  async add(AddSysPlanDto: AddSysPlanDto,) {
+    const params: AddSysPlanDto = JSON.parse(JSON.stringify(AddSysPlanDto));
+  // const data = Object.assign({}, AddSysPlanDto,
+
+  // );
     return await this.prisma.sysReadPlan.create({
-      data,
+      data: {
+        ...params,
+        // sys_user: {
+        //   connect: AddSysPlanDto.userIds.map((userId) => ({ userId })),
+        // },
+      }
     });
   }
 
@@ -69,22 +84,22 @@ export class SysBookService {
   }
 
   // /* 更新 */
-  async update(updateSysNoticeDto: UpdateSysNoticeDto) {
+  async update(UpdateSysPlanDto: UpdateSysPlanDto) {
     return await this.prisma.$transaction(async (prisma) => {
-      const { bookId } = updateSysNoticeDto;
-      const notice = await prisma.sysBookList.findUnique({
+      const { planId } = UpdateSysPlanDto;
+      const notice = await prisma.sysReadPlan.findUnique({
         where: {
-          bookId,
+          planId,
         },
       });
       if (!notice) throw new ApiException('该记录不存在，请重新查询后操作。');
-      const data = Object.assign({}, updateSysNoticeDto
+      const data = Object.assign({}, UpdateSysPlanDto
 
       );
-      return await prisma.sysBookList.update({
+      return await prisma.sysReadPlan.update({
         data,
         where: {
-          bookId,
+          planId,
         },
       });
     });

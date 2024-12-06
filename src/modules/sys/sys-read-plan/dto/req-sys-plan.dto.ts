@@ -7,21 +7,26 @@
  * @Description:
  *
  */
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsArray } from 'class-validator';
 import { DataBaseDto } from 'src/common/dto/data-base.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { Transform, Type } from 'class-transformer';
 /* 分页查询 */
-export class GetSysBookListDto extends PaginationDto {
+export class GetSysPlanDto extends PaginationDto {
   /* 广告标题 */
   @IsOptional()
   @IsString()
   planName: string;
 
+  @IsOptional()
+  @Type()
+  @IsNumber()
+  userId?: number;
+
 }
 
 /* 新增 */
-export class AddSysNoticeDto extends DataBaseDto {
+export class AddSysPlanDto extends DataBaseDto {
   @IsString()
   planName: string;
 
@@ -37,6 +42,9 @@ export class AddSysNoticeDto extends DataBaseDto {
   @IsString()
   endTime?: Date | string;
 
+  // @IsArray()
+  // userIds: number[];
+
   // @IsOptional()
   // @IsString()
   // noticeContent: string;
@@ -46,7 +54,7 @@ export class AddSysNoticeDto extends DataBaseDto {
 }
 
 /* 编辑 */
-export class UpdateSysNoticeDto extends AddSysNoticeDto {
+export class UpdateSysPlanDto extends AddSysPlanDto {
   @IsNumber()
   planId: number;
 }

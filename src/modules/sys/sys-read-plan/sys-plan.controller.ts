@@ -20,9 +20,9 @@ import {
 import { RequiresPermissions } from 'src/common/decorators/requires-permissions.decorator';
 import { PaginationPipe } from 'src/common/pipes/pagination.pipe';
 import {
-  AddSysNoticeDto,
-  GetSysBookListDto,
-  UpdateSysNoticeDto,
+  AddSysPlanDto,
+  GetSysPlanDto,
+  UpdateSysPlanDto,
 } from './dto/req-sys-plan.dto';
 import { SysBookService } from './sys-plan.service';
 import { BusinessTypeEnum, Log } from 'src/common/decorators/log.decorator';
@@ -45,15 +45,15 @@ export class SysBookController {
     isSaveRequestData: false,
   })
   @RequiresPermissions('system:bookList:add')
-  async add(@Body(CreateMessagePipe) addSysNoticeDto: AddSysNoticeDto) {
-    await this.SysBookService.add(addSysNoticeDto);
+  async add(@Body(CreateMessagePipe) AddSysPlanDto: AddSysPlanDto) {
+    await this.SysBookService.add(AddSysPlanDto);
   }
 
   /* 分页查询 */
   @Get('list')
   @RequiresPermissions('system:bookList:query')
-  async list(@Query(PaginationPipe) GetSysBookListDto: GetSysBookListDto) {
-    return await this.SysBookService.list(GetSysBookListDto);
+  async list(@Query(PaginationPipe) GetSysPlanDto: GetSysPlanDto) {
+    return await this.SysBookService.list(GetSysPlanDto);
   }
 
   /* 通过id查询 */
@@ -69,14 +69,14 @@ export class SysBookController {
   @RepeatSubmit()
   @RequiresPermissions('system:bookList:edit')
   @Log({
-    title: '图书管理',
+    title: '图书计划',
     businessType: BusinessTypeEnum.update,
     isSaveRequestData: false,
   })
   async uplate(
-    @Body(UpdateMessagePipe) updateSysNoticeDto: UpdateSysNoticeDto,
+    @Body(UpdateMessagePipe) UpdateSysPlanDto: UpdateSysPlanDto,
   ) {
-    await this.SysBookService.update(updateSysNoticeDto);
+    await this.SysBookService.update(UpdateSysPlanDto);
   }
 
   /* 删除 */
