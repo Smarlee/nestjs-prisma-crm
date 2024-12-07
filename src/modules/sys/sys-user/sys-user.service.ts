@@ -49,6 +49,7 @@ export class SysUserService {
     return await this.customPrisma.client.sysUser.findAndCount({
       include: {
         dept: true,
+        posts:true
       },
       where: {
         AND: {

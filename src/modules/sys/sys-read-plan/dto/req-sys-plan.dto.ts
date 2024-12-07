@@ -42,8 +42,8 @@ export class AddSysPlanDto extends DataBaseDto {
   @IsString()
   endTime?: Date | string;
 
-  // @IsArray()
-  // userIds: number[];
+  @IsArray()
+  userIds: number[];
 
   // @IsOptional()
   // @IsString()

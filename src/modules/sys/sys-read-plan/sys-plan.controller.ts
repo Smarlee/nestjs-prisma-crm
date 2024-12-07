@@ -24,7 +24,7 @@ import {
   GetSysPlanDto,
   UpdateSysPlanDto,
 } from './dto/req-sys-plan.dto';
-import { SysBookService } from './sys-plan.service';
+import { SysBookPlanService } from './sys-plan.service';
 import { BusinessTypeEnum, Log } from 'src/common/decorators/log.decorator';
 import { RepeatSubmit } from 'src/common/decorators/repeat-submit.decorator';
 import { CreateMessagePipe } from 'src/common/pipes/createmessage.pipe';
@@ -34,7 +34,7 @@ import { StringToArrPipe } from 'src/common/pipes/stringtoarr.pipe';
 
 @Controller('system/bookPlan')
 export class SysBookController {
-  constructor(private readonly SysBookService: SysBookService) { }
+  constructor(private readonly SysBookPlanService: SysBookPlanService) { }
 
   /* 新增 */
   @Post()
@@ -46,22 +46,30 @@ export class SysBookController {
   })
   @RequiresPermissions('system:bookList:add')
   async add(@Body(CreateMessagePipe) AddSysPlanDto: AddSysPlanDto) {
-    await this.SysBookService.add(AddSysPlanDto);
+    await this.SysBookPlanService.add(AddSysPlanDto);
   }
 
   /* 分页查询 */
   @Get('list')
   @RequiresPermissions('system:bookList:query')
   async list(@Query(PaginationPipe) GetSysPlanDto: GetSysPlanDto) {
-    return await this.SysBookService.list(GetSysPlanDto);
+    return await this.SysBookPlanService.list(GetSysPlanDto);
   }
 
   /* 通过id查询 */
   @Get(':planId')
   @RequiresPermissions('system:bookList:query')
-  async oneByBookId(@Param('planId') bookId: number) {
-    const notice = await this.SysBookService.oneBybookId(bookId);
-    return DataObj.create(notice);
+  async oneByBookId(@Param('planId') planId: number) {
+    const plan = await this.SysBookPlanService.oneBybookId(planId);
+
+    const [sys_user] = await this.SysBookPlanService.Usersfind();
+    const userIds = plan.sys_user.map((item) => item.userId);
+    return {
+      data: plan,
+      sys_user,
+      userIds
+    }
+    // return DataObj.create(notice);
   }
 
   // /* 更新 */
@@ -76,7 +84,7 @@ export class SysBookController {
   async uplate(
     @Body(UpdateMessagePipe) UpdateSysPlanDto: UpdateSysPlanDto,
   ) {
-    await this.SysBookService.update(UpdateSysPlanDto);
+    await this.SysBookPlanService.update(UpdateSysPlanDto);
   }
 
   /* 删除 */
@@ -89,6 +97,6 @@ export class SysBookController {
   async delete(
     @Param('bookIds', new StringToArrPipe()) bookIdArr: number[],
   ) {
-    await this.SysBookService.delete(bookIdArr);
+    await this.SysBookPlanService.delete(bookIdArr);
   }
 }
