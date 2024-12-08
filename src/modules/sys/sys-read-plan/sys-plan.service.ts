@@ -33,7 +33,8 @@ export class SysBookPlanService {
     const { total, rows } =
       await this.customPrisma.client.sysReadPlan.findAndCount({
         include: {
-          sys_user: true
+          sys_user: true,
+          books:true
         },
         where: {
           AND: {
@@ -59,11 +60,16 @@ export class SysBookPlanService {
   async add(AddSysPlanDto: AddSysPlanDto,) {
     const params: AddSysPlanDto = JSON.parse(JSON.stringify(AddSysPlanDto));
     delete params.userIds; // 删除不必要的传参
+    delete params.bookIds; // 删除不必要的传参
+
     return await this.prisma.sysReadPlan.create({
       data: {
         ...params,
         sys_user: {
           connect: AddSysPlanDto.userIds.map((userId) => ({ userId })),
+        },
+        books: {
+          connect: AddSysPlanDto.bookIds.map((bookId) => ({ bookId })),
         },
       }
     });
@@ -73,7 +79,8 @@ export class SysBookPlanService {
   async oneBybookId(planId: number) {
     return await this.prisma.sysReadPlan.findUnique({
       include: {
-        sys_user:true
+        sys_user:true,
+        books:true,
       },
       where: {
         planId,
@@ -97,6 +104,7 @@ export class SysBookPlanService {
 
       const params: AddSysPlanDto = JSON.parse(JSON.stringify(updateSysPlanDto));
       delete params.userIds; // 删除不必要的传参
+      delete params.bookIds; // 删除不必要的传参
 
        await prisma.sysReadPlan.update({
       data: {
@@ -104,7 +112,9 @@ export class SysBookPlanService {
         sys_user: {
           set: updateSysPlanDto.userIds.map((userId) => ({ userId })),
         },
- 
+        books: {
+          connect: updateSysPlanDto.bookIds.map((bookId) => ({ bookId })),
+        },
       },
       where: {
         planId,
@@ -115,11 +125,11 @@ export class SysBookPlanService {
   }
 
   /* 删除公告 */
-  async delete(bookIdArr: number[]) {
-    await this.prisma.sysBookList.deleteMany({
+  async delete(planIdArr: number[]) {
+    await this.prisma.sysReadPlan.deleteMany({
       where: {
-        bookId: {
-          in: bookIdArr,
+        planId: {
+          in: planIdArr,
         },
       },
     });

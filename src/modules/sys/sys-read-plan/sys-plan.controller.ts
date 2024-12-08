@@ -64,8 +64,9 @@ export class SysBookController {
 
     const [sys_user] = await this.SysBookPlanService.Usersfind();
     const userIds = plan.sys_user.map((item) => item.userId);
+    const bookIds = plan.books.map((item) => item.bookId);
     return {
-      data: plan,
+      data: {...plan,bookIds},
       sys_user,
       userIds
     }
@@ -88,15 +89,15 @@ export class SysBookController {
   }
 
   /* 删除 */
-  @Delete(':bookIds')
+  @Delete(':planIds')
   @RequiresPermissions('system:bookList:remove')
   @Log({
     title: '公告管理',
     businessType: BusinessTypeEnum.delete,
   })
   async delete(
-    @Param('bookIds', new StringToArrPipe()) bookIdArr: number[],
+    @Param('planIds', new StringToArrPipe()) planIdArr: number[],
   ) {
-    await this.SysBookPlanService.delete(bookIdArr);
+    await this.SysBookPlanService.delete(planIdArr);
   }
 }

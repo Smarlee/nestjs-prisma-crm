@@ -45,6 +45,9 @@ export class AddSysPlanDto extends DataBaseDto {
   @IsArray()
   userIds: number[];
 
+  @IsArray()
+  bookIds: number[];
+
   // @IsOptional()
   // @IsString()
   // noticeContent: string;
