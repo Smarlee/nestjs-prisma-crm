@@ -1,0 +1,123 @@
+在NestJS中结合Prisma操作MySQL数据库，如果想要为每个用户的阅读计划生成详细的进度报告，你可以通过以下步骤实现：
+
+
+1. 数据模型设计
+首先，确保你的Plan模型包含了与User的关联，以及开始时间和完成时间字段。同时，你可能需要一个新的模型来记录每个用户对于每个计划的详细进度，比如PlanProgress模型。
+
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  plans    Plan[]
+}
+
+model Plan {
+  id         Int      @id @default(autoincrement())
+  name       String
+  startTime  DateTime
+  endTime    DateTime
+  users      User[]
+  progresses PlanProgress[]
+}
+
+model PlanProgress {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  planId     Int
+  progress   Float
+  completed  Boolean
+  user       User     @relation(fields: [userId], references: [id])
+  plan       Plan     @relation(fields: [planId], references: [id])
+}
+2. 创建服务
+创建一个PlanProgressService来处理进度相关逻辑。
+
+// plan-progress.service.ts
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+
+@Injectable()
+export class PlanProgressService {
+  constructor(private prisma: PrismaService) {}
+
+  async generateProgressReports(): Promise<void> {
+    const plans = await this.prisma.plan.findMany({
+      where: {
+        endTime: { lte: new Date() }, // 获取所有已完成的计划
+      },
+      include: { progresses: true },
+    });
+
+    for (const plan of plans) {
+      for (const progress of plan.progresses) {
+        if (!progress.completed && new Date() > plan.endTime) {
+          await this.prisma.planProgress.update({
+            where: { id: progress.id },
+            data: { completed: true },
+          });
+        }
+      }
+    }
+  }
+}
+3. 定时任务
+在app.service.ts中，使用@Scheduled装饰器来定期调用generateProgressReports方法。
+
+// app.service.ts
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { PlanProgressService } from './plan-progress.service';
+
+@Injectable()
+export class AppService {
+  private readonly logger = new Logger(AppService.name);
+  private readonly planProgressService: PlanProgressService;
+
+  constructor(planProgressService: PlanProgressService) {
+    this.planProgressService = planProgressService;
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  handleCron() {
+    this.logger.log('Cron Job triggered');
+    this.generateProgressReports();
+  }
+
+  private async generateProgressReports(): Promise<void> {
+    return this.planProgressService.generateProgressReports();
+  }
+}
+4. 更新进度
+当用户更新他们的进度时，你需要在PlanProgress模型中更新对应的记录。这可以通过一个专门的控制器和路由来实现。
+
+// plan-progress.controller.ts
+import { Controller, Post, Body } from '@nestjs/common';
+import { PlanProgressService } from './plan-progress.service';
+
+@Controller('plan-progress')
+export class PlanProgressController {
+  constructor(private readonly planProgressService: PlanProgressService) {}
+
+  @Post()
+  async updateProgress(@Body() body: any): Promise<any> {
+    const { userId, planId, progress } = body;
+    const updatedProgress = await this.planProgressService.updateProgress(userId, planId, progress);
+    return updatedProgress;
+  }
+}
+在PlanProgressService中实现updateProgress方法。
+
+// plan-progress.service.ts
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
+
+@Injectable()
+export class PlanProgressService {
+  constructor(private prisma: PrismaService) {}
+
+  async updateProgress(userId: number, planId: number, progress: number): Promise<any> {
+    return await this.prisma.planProgress.update({
+      where: { userId_planId: { userId, planId } },
+      data: { progress },
+    });
+  }
+}
