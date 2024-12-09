@@ -24,10 +24,13 @@ import {
 import { CustomPrismaService, PrismaService } from 'nestjs-prisma';
 import { ExtendedPrismaClient } from 'src/shared/prisma/prisma.extension';
 import { SysJob } from '@prisma/client';
+
+import { planProgressService } from 'src/modules/sys/plan-process/plan-progress.service'
 import { InjectQueue } from '@nestjs/bullmq';
 import { Job, Queue } from 'bullmq';
 import * as parser from 'cron-parser';
 import dayjs from 'dayjs';
+import { Server } from 'http';
 
 @Injectable()
 export class JobService {
@@ -41,7 +44,7 @@ export class JobService {
     private readonly prisma: PrismaService,
     @Inject('CustomPrisma')
     private readonly customPrisma: CustomPrismaService<ExtendedPrismaClient>,
-  ) {}
+  ) { }
 
   /* 项目每次启动时初始化定时任务 */
   async initJob() {
@@ -327,4 +330,61 @@ export class JobService {
       }, 5 * 1000);
     });
   }
+
+
+  async add(AddProgressDto: any) {
+    console.log('AddProgressDto');
+    const data = Object.assign({}, {
+      planId: 3,
+      userId: 3,
+      progress: 1,
+      completed: true
+    },);
+    return await this.prisma.planProgress.create({
+      data
+    });
+
+  }
+
+  async updatePlans() {
+    const now = new Date();
+    const plans = await this.prisma.sysReadPlan.findMany({
+      where: {
+        endTime: { lte: now },  // 获取所有已完成的计划
+      },
+    });
+    console.log('plans', plans)
+    for (const plan of plans) {
+      const users = await this.prisma.sysUser.findMany({
+        where: {
+          sys_read_plan: {
+            some: {
+              planId: plan.planId,
+            },
+          },
+        },
+      });
+      console.log('users', users)
+      for (const user of users) {
+        await this.updateProgress(plan.planId, user.userId, 100, true);
+      }
+
+    }
+  }
+
+
+  async updateProgress(planId: number, userId: number, progress: number, completed: boolean) {
+    await this.prisma.planProgress.upsert({
+      where: {
+        planId_userId: {
+          planId,
+          userId,
+        },
+
+      },
+      update: { progress, completed },
+      create: { planId, userId, progress, completed },
+    });
+  }
+
 }

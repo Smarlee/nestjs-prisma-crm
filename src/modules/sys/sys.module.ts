@@ -20,7 +20,7 @@ import { SysTableModule } from './sys-table/sys-table.module';
 import { SysWebModule } from './sys-web/sys-web.module';
 import { SysBookModule } from './sys-bookList/sys-book.module';
 import { SysPlanModule } from './sys-read-plan/sys-plan.module';
-
+import { planProgressModule } from './plan-process/plan-progress.module';
 @Module({
   imports: [
     SysUserModule,
@@ -34,7 +34,8 @@ import { SysPlanModule } from './sys-read-plan/sys-plan.module';
     SysTableModule,
     SysWebModule,
     SysBookModule,
-    SysPlanModule
+    SysPlanModule,
+    planProgressModule
   ],
 })
 export class SysModule {}

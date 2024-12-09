@@ -27,7 +27,7 @@ export class SysBookService {
   /* 分页查询 */
   async list(GetSysBookListDto: GetSysBookListDto) {
     const { bookName, menuType } = GetSysBookListDto;
-    console.log('type0', menuType)
+    console.log('menuType', menuType)
     const { total, rows } =
       await this.customPrisma.client.sysBookList.findAndCount({
         where: {

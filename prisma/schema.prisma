@@ -280,62 +280,84 @@ model SysRole {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// 用户表
 model SysUser {
-  userId        Int           @id @default(autoincrement())
-  avatar        String?       @default("") @db.VarChar(100)
-  createBy      String?       @default("") @db.VarChar(64)
-  createTime    DateTime?     @db.DateTime(0)
-  delFlag       String?       @default("0") @db.Char(1)
+  userId        Int            @id @default(autoincrement())
+  avatar        String?        @default("") @db.VarChar(100)
+  createBy      String?        @default("") @db.VarChar(64)
+  createTime    DateTime?      @db.DateTime(0)
+  delFlag       String?        @default("0") @db.Char(1)
   deptId        Int?
-  email         String?       @default("") @db.VarChar(50)
-  loginDate     DateTime?     @db.DateTime(0)
-  loginIp       String?       @default("") @db.VarChar(128)
-  nickName      String        @db.VarChar(30)
-  password      String?       @default("") @db.VarChar(100)
-  phonenumber   String?       @default("") @db.VarChar(11)
-  remark        String?       @db.VarChar(500)
-  sex           String?       @default("0") @db.Char(1)
-  status        String?       @default("0") @db.Char(1)
-  updateBy      String?       @default("") @db.VarChar(64)
-  updateTime    DateTime?     @db.DateTime(0)
-  userName      String        @unique @db.VarChar(30)
-  userType      String?       @default("00") @db.VarChar(2)
-  dept          SysDept?      @relation(fields: [deptId], references: [deptId])
-  posts         SysPost[]     @relation("sys_post_to_sys_user")
-  roles         SysRole[]     @relation("sys_role_to_sys_user")
-  sys_read_plan SysReadPlan[] @relation("sysreadplantosysuser")
+  email         String?        @default("") @db.VarChar(50)
+  loginDate     DateTime?      @db.DateTime(0)
+  loginIp       String?        @default("") @db.VarChar(128)
+  nickName      String         @db.VarChar(30)
+  password      String?        @default("") @db.VarChar(100)
+  phonenumber   String?        @default("") @db.VarChar(11)
+  remark        String?        @db.VarChar(500)
+  sex           String?        @default("0") @db.Char(1)
+  status        String?        @default("0") @db.Char(1)
+  updateBy      String?        @default("") @db.VarChar(64)
+  updateTime    DateTime?      @db.DateTime(0)
+  userName      String         @unique @db.VarChar(30)
+  userType      String?        @default("00") @db.VarChar(2)
+  progresses    PlanProgress[]
+  dept          SysDept?       @relation(fields: [deptId], references: [deptId])
+  posts         SysPost[]      @relation("sys_post_to_sys_user")
+  roles         SysRole[]      @relation("sys_role_to_sys_user")
+  sys_read_plan SysReadPlan[]  @relation("sysreadplantosysuser")
 
   @@index([deptId], map: "sys_user_deptId_fkey")
   @@map("sys_user")
 }
 
 model SysReadPlan {
-  planId     Int       @id @default(autoincrement())
-  planName   String    @db.VarChar(50)
+  planId     Int            @id @default(autoincrement())
+  planName   String         @db.VarChar(50)
   createTime DateTime?
-  remark     String?   @db.VarChar(500)
+  remark     String?        @db.VarChar(500)
   updateTime DateTime?
-  createBy   String?   @db.VarChar(64)
-  updateBy   String?   @db.VarChar(64)
+  createBy   String?        @db.VarChar(64)
+  updateBy   String?        @db.VarChar(64)
   startTime  DateTime?
   endTime    DateTime?
   userId     Int?
-  sys_user   SysUser[] @relation("sysreadplantosysuser")
-  // users      SysUser? @relation(fields: [userId], references: [userId])
-  books     SysBookList[] @relation("read_plan_to_book_list")
+  progresses PlanProgress[]
+  books      SysBookList[]  @relation("read_plan_to_book_list")
+  sys_user   SysUser[]      @relation("sysreadplantosysuser")
+
   @@index([userId], map: "sys_read_plan_userId_fkey")
   @@map("sys_read_plan")
 }
 
+model PlanProgress {
+  progressId Int         @id @default(autoincrement())
+  userId     Int
+  planId     Int
+  progress   Float
+  completed  Boolean
+  createBy   String?     @db.VarChar(64)
+  updateBy   String?     @db.VarChar(64)
+  createTime DateTime?   @db.DateTime(0)
+  updateTime DateTime?   @db.DateTime(0)
+  plan       SysReadPlan @relation(fields: [planId], references: [planId])
+  user       SysUser     @relation(fields: [userId], references: [userId])
+
+  @@index([planId], map: "plan_progress_planId_fkey")
+  @@index([userId], map: "plan_progress_userId_fkey")
+  @@unique([planId,userId])
+  @@map("plan_progress")
+}
+
 model SysBookList {
-  bookId     Int       @id @default(autoincrement())
-  bookName   String    @db.VarChar(50)
-  menuType   String    @db.Char(1)
-  remark     String?   @db.VarChar(500)
+  bookId     Int           @id @default(autoincrement())
+  bookName   String        @db.VarChar(50)
+  menuType   String        @db.Char(1)
+  remark     String?       @db.VarChar(500)
   createTime DateTime?
   updateTime DateTime?
-  createBy   String?   @db.VarChar(64)
-  price      Decimal?  @db.Decimal(10, 2)
-  updateBy   String?   @db.VarChar(64)
-  plans      SysReadPlan[]  @relation("read_plan_to_book_list")
+  createBy   String?       @db.VarChar(64)
+  price      Decimal?      @db.Decimal(10, 2)
+  updateBy   String?       @db.VarChar(64)
+  plans      SysReadPlan[] @relation("read_plan_to_book_list")
+
   @@map("sys_book_list")
 }
