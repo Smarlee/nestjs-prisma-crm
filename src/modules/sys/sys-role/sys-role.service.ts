@@ -37,12 +37,15 @@ export class SysRoleService {
   ) {}
   /* 分页查询 */
   async list(getSysRoleListDto: GetSysRoleListDto) {
-    const { skip, take, status } = getSysRoleListDto;
+    const { skip, take, status, roleName } = getSysRoleListDto;
     return await this.customPrisma.client.sysRole.findAndCount({
       orderBy: {
         roleSort: 'asc',
       },
       where: {
+        roleName: {
+          contains: roleName,
+        },
         delFlag: '0',
         status,
       },

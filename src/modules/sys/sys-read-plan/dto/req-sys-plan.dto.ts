@@ -31,7 +31,8 @@ export class AddSysPlanDto extends DataBaseDto {
   planName: string;
 
   // @IsString()
-  // price: string;
+  // ids: string;
+
   @IsNumber()
   @Type()
   userId: number;
@@ -47,6 +48,7 @@ export class AddSysPlanDto extends DataBaseDto {
 
   @IsArray()
   bookIds: number[];
+
 
   // @IsOptional()
   // @IsString()

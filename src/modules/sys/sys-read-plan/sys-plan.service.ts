@@ -65,6 +65,7 @@ export class SysBookPlanService {
     return await this.prisma.sysReadPlan.create({
       data: {
         ...params,
+        ids: AddSysPlanDto.bookIds.toString(),
         sys_user: {
           connect: AddSysPlanDto.userIds.map((userId) => ({ userId })),
         },
@@ -109,6 +110,7 @@ export class SysBookPlanService {
        await prisma.sysReadPlan.update({
       data: {
         ...params,
+           ids: updateSysPlanDto.bookIds.toString(),
         sys_user: {
           set: updateSysPlanDto.userIds.map((userId) => ({ userId })),
         },

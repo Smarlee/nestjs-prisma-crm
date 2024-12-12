@@ -97,7 +97,7 @@ export class ReadingPlanService {
 
     return readingPlan;
   }
-
+```bash
   async updateProgress(readingPlanId: number, userId: number, progress: number, completed: boolean) {
     await this.prisma.readingPlanDetail.upsert({
       where: { readingPlanId_userId: { readingPlanId, userId } },
@@ -120,6 +120,7 @@ export class ReadingPlanController {
     return this.readingPlanService.create(createReadingPlanDto);
   }
 }
+```
 ## 5. 创建定时任务
 schedule.module.ts
 import { Module, ScheduleModule } from '@nestjs/common';

@@ -320,6 +320,7 @@ model SysReadPlan {
   startTime  DateTime?
   endTime    DateTime?
   userId     Int?
+  ids        String?        @db.VarChar(500)
   progresses PlanProgress[]
   books      SysBookList[]  @relation("read_plan_to_book_list")
   sys_user   SysUser[]      @relation("sysreadplantosysuser")
@@ -329,35 +330,37 @@ model SysReadPlan {
 }
 
 model PlanProgress {
-  progressId Int         @id @default(autoincrement())
-  userId     Int
-  planId     Int
-  progress   Float
-  completed  Boolean
-  createBy   String?     @db.VarChar(64)
-  updateBy   String?     @db.VarChar(64)
-  createTime DateTime?   @db.DateTime(0)
-  updateTime DateTime?   @db.DateTime(0)
-  plan       SysReadPlan @relation(fields: [planId], references: [planId])
-  user       SysUser     @relation(fields: [userId], references: [userId])
+  progressId    Int           @id @default(autoincrement())
+  userId        Int
+  planId        Int
+  progress      Float
+  completed     Boolean
+  createBy      String?       @db.VarChar(64)
+  updateBy      String?       @db.VarChar(64)
+  createTime    DateTime?     @db.DateTime(0)
+  updateTime    DateTime?     @db.DateTime(0)
+  plan          SysReadPlan   @relation(fields: [planId], references: [planId])
+  user          SysUser       @relation(fields: [userId], references: [userId])
+  sys_book_list SysBookList[] @relation("planprogresstosysbooklist")
 
+  @@unique([planId, userId])
   @@index([planId], map: "plan_progress_planId_fkey")
   @@index([userId], map: "plan_progress_userId_fkey")
-  @@unique([planId,userId])
   @@map("plan_progress")
 }
 
 model SysBookList {
-  bookId     Int           @id @default(autoincrement())
-  bookName   String        @db.VarChar(50)
-  menuType   String        @db.Char(1)
-  remark     String?       @db.VarChar(500)
-  createTime DateTime?
-  updateTime DateTime?
-  createBy   String?       @db.VarChar(64)
-  price      Decimal?      @db.Decimal(10, 2)
-  updateBy   String?       @db.VarChar(64)
-  plans      SysReadPlan[] @relation("read_plan_to_book_list")
+  bookId        Int            @id @default(autoincrement())
+  bookName      String         @db.VarChar(50)
+  menuType      String         @db.Char(1)
+  remark        String?        @db.VarChar(500)
+  createTime    DateTime?
+  updateTime    DateTime?
+  createBy      String?        @db.VarChar(64)
+  price         Decimal?       @db.Decimal(10, 2)
+  updateBy      String?        @db.VarChar(64)
+  plan_progress PlanProgress[] @relation("planprogresstosysbooklist")
+  plans         SysReadPlan[]  @relation("read_plan_to_book_list")
 
   @@map("sys_book_list")
 }

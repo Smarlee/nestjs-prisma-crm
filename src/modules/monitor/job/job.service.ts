@@ -332,25 +332,13 @@ export class JobService {
   }
 
 
-  async add(AddProgressDto: any) {
-    console.log('AddProgressDto');
-    const data = Object.assign({}, {
-      planId: 3,
-      userId: 3,
-      progress: 1,
-      completed: true
-    },);
-    return await this.prisma.planProgress.create({
-      data
-    });
-
-  }
 
   async updatePlans() {
     const now = new Date();
     const plans = await this.prisma.sysReadPlan.findMany({
       where: {
-        endTime: { lte: now },  // 获取所有已完成的计划
+        startTime: { lte: now },  // 获取所有已开始的计划  lte <= less than,   gte  >= greater than or equal to    now>= start  and  now <=end  
+        endTime: { gte: now }  
       },
     });
     console.log('plans', plans)
@@ -366,14 +354,14 @@ export class JobService {
       });
       console.log('users', users)
       for (const user of users) {
-        await this.updateProgress(plan.planId, user.userId, 100, true);
+        await this.updateProgress(plan.planId, user.userId, 100, true, dayjs().format());
       }
 
     }
   }
 
 
-  async updateProgress(planId: number, userId: number, progress: number, completed: boolean) {
+  async updateProgress(planId: number, userId: number, progress: number, completed: boolean, createTime: Date | string) {
     await this.prisma.planProgress.upsert({
       where: {
         planId_userId: {
@@ -383,7 +371,7 @@ export class JobService {
 
       },
       update: { progress, completed },
-      create: { planId, userId, progress, completed },
+      create: { planId, userId, progress, completed, createTime },
     });
   }
 

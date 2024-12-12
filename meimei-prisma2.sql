@@ -11,11 +11,28 @@
  Target Server Version : 50719
  File Encoding         : 65001
 
- Date: 09/12/2024 11:59:19
+ Date: 12/12/2024 12:11:46
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for _planprogresstosysbooklist
+-- ----------------------------
+DROP TABLE IF EXISTS `_planprogresstosysbooklist`;
+CREATE TABLE `_planprogresstosysbooklist`  (
+  `A` int(11) NOT NULL,
+  `B` int(11) NOT NULL,
+  UNIQUE INDEX `_PlanProgressToSysBookList_AB_unique`(`A`, `B`) USING BTREE,
+  INDEX `_PlanProgressToSysBookList_B_index`(`B`) USING BTREE,
+  CONSTRAINT `_PlanProgressToSysBookList_A_fkey` FOREIGN KEY (`A`) REFERENCES `plan_progress` (`progressId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `_PlanProgressToSysBookList_B_fkey` FOREIGN KEY (`B`) REFERENCES `sys_book_list` (`bookId`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of _planprogresstosysbooklist
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for _prisma_migrations
@@ -49,12 +66,13 @@ CREATE TABLE `_read_plan_to_book_list`  (
   INDEX `_read_plan_to_book_list_B_index`(`B`) USING BTREE,
   CONSTRAINT `_read_plan_to_book_list_A_fkey` FOREIGN KEY (`A`) REFERENCES `sys_book_list` (`bookId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `_read_plan_to_book_list_B_fkey` FOREIGN KEY (`B`) REFERENCES `sys_read_plan` (`planId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of _read_plan_to_book_list
 -- ----------------------------
 INSERT INTO `_read_plan_to_book_list` VALUES (1, 1);
+INSERT INTO `_read_plan_to_book_list` VALUES (2, 1);
 INSERT INTO `_read_plan_to_book_list` VALUES (3, 2);
 INSERT INTO `_read_plan_to_book_list` VALUES (4, 2);
 INSERT INTO `_read_plan_to_book_list` VALUES (3, 3);
@@ -153,7 +171,7 @@ CREATE TABLE `_sysreadplantosysuser`  (
   INDEX `_sysreadplantosysuser_B_index`(`B`) USING BTREE,
   CONSTRAINT `_sysreadplantosysuser_A_fkey` FOREIGN KEY (`A`) REFERENCES `sys_read_plan` (`planId`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `_sysreadplantosysuser_B_fkey` FOREIGN KEY (`B`) REFERENCES `sys_user` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of _sysreadplantosysuser
@@ -168,6 +186,34 @@ INSERT INTO `_sysreadplantosysuser` VALUES (2, 3);
 INSERT INTO `_sysreadplantosysuser` VALUES (3, 3);
 INSERT INTO `_sysreadplantosysuser` VALUES (4, 3);
 INSERT INTO `_sysreadplantosysuser` VALUES (5, 3);
+
+-- ----------------------------
+-- Table structure for plan_progress
+-- ----------------------------
+DROP TABLE IF EXISTS `plan_progress`;
+CREATE TABLE `plan_progress`  (
+  `progressId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `planId` int(11) NOT NULL,
+  `progress` double NOT NULL,
+  `completed` tinyint(1) NOT NULL,
+  `createBy` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `updateBy` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `createTime` datetime NULL DEFAULT NULL,
+  `updateTime` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`progressId`) USING BTREE,
+  UNIQUE INDEX `plan_progress_planId_userId_key`(`planId`, `userId`) USING BTREE,
+  INDEX `plan_progress_planId_fkey`(`planId`) USING BTREE,
+  INDEX `plan_progress_userId_fkey`(`userId`) USING BTREE,
+  CONSTRAINT `plan_progress_planId_fkey` FOREIGN KEY (`planId`) REFERENCES `sys_read_plan` (`planId`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `plan_progress_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `sys_user` (`userId`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of plan_progress
+-- ----------------------------
+INSERT INTO `plan_progress` VALUES (1, 1, 1, 100, 1, NULL, NULL, '2024-12-12 02:46:55', NULL);
+INSERT INTO `plan_progress` VALUES (2, 2, 1, 100, 1, NULL, NULL, '2024-12-12 02:46:55', NULL);
 
 -- ----------------------------
 -- Table structure for sys_book_list
@@ -245,7 +291,7 @@ CREATE TABLE `sys_dept`  (
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (100, NULL, ',', '槑槑科技', 0, '小蒋', '13006133172', '87789771@qq.com', '0', '0', 'admin', '2024-05-17 16:07:16', '', NULL);
+INSERT INTO `sys_dept` VALUES (100, NULL, ',', '涧光公司', 0, '小蒋', '13006133172', '87789771@qq.com', '0', '0', 'admin', '2024-05-17 16:07:16', '', NULL);
 INSERT INTO `sys_dept` VALUES (101, 100, ',100,101,', '合肥总公司', 1, '小蒋', '13006133172', '87789771@qq.com', '0', '0', 'admin', '2024-05-17 16:07:16', '', NULL);
 INSERT INTO `sys_dept` VALUES (102, 100, ',100,102,', '阜阳分公司', 2, '小蒋', '13006133172', '87789771@qq.com', '0', '0', 'admin', '2024-05-17 16:07:16', '', NULL);
 INSERT INTO `sys_dept` VALUES (103, 101, ',100,101,103,', '研发部门', 1, '小蒋', '13006133172', '87789771@qq.com', '0', '0', 'admin', '2024-05-17 16:07:16', '', NULL);
@@ -369,7 +415,7 @@ CREATE TABLE `sys_job`  (
 -- ----------------------------
 -- Records of sys_job
 -- ----------------------------
-INSERT INTO `sys_job` VALUES (1, '测试任务', 'DEFAULT', 'JobService.demo(1,2,3,true)', '0/10 * * * * ?', '1', '1', '1', 'admin', '2024-05-17 14:02:53', '', NULL, '');
+INSERT INTO `sys_job` VALUES (1, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '0/10 * * * * ?', '1', '1', '1', 'admin', '2024-05-17 14:02:53', 'admin', '2024-12-12 02:46:52', '');
 
 -- ----------------------------
 -- Table structure for sys_job_log
@@ -385,12 +431,14 @@ CREATE TABLE `sys_job_log`  (
   `exceptionInfo` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '',
   `createTime` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`jobLogId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_job_log
 -- ----------------------------
 INSERT INTO `sys_job_log` VALUES (1, '测试任务', 'DEFAULT', 'JobService.demo(1,2,3,true)', '执行成功', '0', '', '2024-05-17 14:03:05');
+INSERT INTO `sys_job_log` VALUES (2, '测试任务', 'DEFAULT', 'JobService.demo(1,2,3,true)', '执行成功', '0', '', '2024-12-12 02:46:20');
+INSERT INTO `sys_job_log` VALUES (3, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 02:46:56');
 
 -- ----------------------------
 -- Table structure for sys_login_infor
@@ -458,7 +506,7 @@ CREATE TABLE `sys_menu`  (
   PRIMARY KEY (`menuId`) USING BTREE,
   INDEX `sys_menu_parentId_fkey`(`parentId`) USING BTREE,
   CONSTRAINT `sys_menu_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `sys_menu` (`menuId`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1064 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1065 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -549,6 +597,7 @@ INSERT INTO `sys_menu` VALUES (1060, '生成代码', 116, 6, '#', NULL, NULL, '1
 INSERT INTO `sys_menu` VALUES (1061, '图书管理', NULL, 0, 'bookSys', NULL, NULL, '1', '0', 'M', '0', '0', NULL, 'druid', 'admin', '2024-12-05 06:14:28', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1062, '图书库', 1061, 0, 'book', 'bookSys/book/index', NULL, '1', '0', 'C', '0', '0', NULL, '#', 'admin', '2024-12-05 06:15:41', 'admin', '2024-12-05 06:15:52', '');
 INSERT INTO `sys_menu` VALUES (1063, '阅读计划', 1061, 1, 'readPlan', 'bookSys/readPlan/index', NULL, '1', '0', 'C', '0', '0', NULL, '#', 'admin', '2024-12-05 06:16:29', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (1064, '阅读计划详情', 1061, 3, 'planProgress', 'bookSys/planProgress/index', NULL, '1', '0', 'C', '0', '0', NULL, '#', 'admin', '2024-12-12 02:44:19', 'admin', '2024-12-12 02:44:49', '');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -600,7 +649,7 @@ CREATE TABLE `sys_oper_log`  (
   INDEX `idxSysOperLogBt`(`businessType`) USING BTREE,
   INDEX `idxSysOperLogOt`(`operTime`) USING BTREE,
   INDEX `idxSysOperLogS`(`status`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 63 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 70 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -667,6 +716,13 @@ INSERT INTO `sys_oper_log` VALUES (59, '图书计划', '2', 'SysBookController.u
 INSERT INTO `sys_oper_log` VALUES (60, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-09 01:30:11', 121);
 INSERT INTO `sys_oper_log` VALUES (61, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-09 01:30:15', 65);
 INSERT INTO `sys_oper_log` VALUES (62, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-09 01:30:20', 62);
+INSERT INTO `sys_oper_log` VALUES (63, '菜单管理', '1', 'SysMenuController.add()', 'POST', 0, 'admin', '研发部门', '/system/menu', '127.0.0.1', '内网IP', '{\"params\":{},\"query\":{},\"body\":{\"parentId\":1061,\"menuName\":\"阅读计划详情\",\"menuType\":\"C\",\"orderNum\":3,\"isFrame\":\"1\",\"isCache\":\"0\",\"visible\":\"0\",\"status\":\"0\",\"path\":\"progress\",\"component\":\"progress\"}}', '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 02:44:19', 50);
+INSERT INTO `sys_oper_log` VALUES (64, '菜单管理', '2', 'SysMenuController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/menu', '127.0.0.1', '内网IP', '{\"params\":{},\"query\":{},\"body\":{\"menuId\":1064,\"menuName\":\"阅读计划详情\",\"parentId\":1061,\"orderNum\":3,\"path\":\"planProgress\",\"component\":\"bookSys/planProgress/index\",\"query\":null,\"isFrame\":\"1\",\"isCache\":\"0\",\"menuType\":\"C\",\"visible\":\"0\",\"status\":\"0\",\"perms\":null,\"icon\":\"#\",\"createBy\":\"admin\",\"createTime\":\"2024-12-12T02:44:19.000Z\",\"updateBy\":\"\",\"updateTime\":null,\"remark\":\"\"}}', '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 02:44:49', 67);
+INSERT INTO `sys_oper_log` VALUES (65, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 02:48:12', 120);
+INSERT INTO `sys_oper_log` VALUES (66, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":500,\"msg\":\"TypeError: Cannot read properties of undefined (reading \'toString\')\"}', '1', 'TypeError: Cannot read properties of undefined (reading \'toString\')', '2024-12-12 02:49:01', 13);
+INSERT INTO `sys_oper_log` VALUES (67, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":500,\"msg\":\"TypeError: Cannot read properties of undefined (reading \'toString\')\"}', '1', 'TypeError: Cannot read properties of undefined (reading \'toString\')', '2024-12-12 02:49:06', 11);
+INSERT INTO `sys_oper_log` VALUES (68, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 02:50:53', 106);
+INSERT INTO `sys_oper_log` VALUES (69, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 04:09:13', 131);
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -710,6 +766,7 @@ CREATE TABLE `sys_read_plan`  (
   `startTime` datetime(3) NULL DEFAULT NULL,
   `endTime` datetime(3) NULL DEFAULT NULL,
   `userId` int(11) NULL DEFAULT NULL,
+  `ids` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`planId`) USING BTREE,
   INDEX `sys_read_plan_userId_fkey`(`userId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
@@ -717,11 +774,11 @@ CREATE TABLE `sys_read_plan`  (
 -- ----------------------------
 -- Records of sys_read_plan
 -- ----------------------------
-INSERT INTO `sys_read_plan` VALUES (1, '阅读计划2', NULL, NULL, '2024-12-09 01:27:40.000', NULL, 'admin', '2024-12-06 06:31:00.000', '2025-03-22 06:31:04.000', 1);
-INSERT INTO `sys_read_plan` VALUES (2, '每日一读', '2024-12-05 06:36:16.000', NULL, '2024-12-09 01:28:24.000', 'admin', 'admin', '2025-01-22 14:31:04.000', '2025-04-06 08:00:00.000', 1);
-INSERT INTO `sys_read_plan` VALUES (3, 'xxxxxxxxxx', '2024-12-07 03:40:55.000', NULL, '2024-12-09 01:30:11.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-22 14:31:04.000', 2);
-INSERT INTO `sys_read_plan` VALUES (4, '多人读书计划', '2024-12-07 03:47:57.000', NULL, '2024-12-09 01:30:15.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-21 22:31:04.000', 2);
-INSERT INTO `sys_read_plan` VALUES (5, 'test', '2024-12-07 04:01:03.000', NULL, '2024-12-09 01:30:20.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-21 22:31:04.000', 2);
+INSERT INTO `sys_read_plan` VALUES (1, '阅读计划2-每日一读', NULL, NULL, '2024-12-12 04:09:13.000', NULL, 'admin', '2024-12-06 06:31:00.000', '2025-03-22 06:31:04.000', 1, '1,2');
+INSERT INTO `sys_read_plan` VALUES (2, '每日一读', '2024-12-05 06:36:16.000', NULL, '2024-12-09 01:28:24.000', 'admin', 'admin', '2025-01-22 14:31:04.000', '2025-04-06 08:00:00.000', 1, NULL);
+INSERT INTO `sys_read_plan` VALUES (3, 'xxxxxxxxxx', '2024-12-07 03:40:55.000', NULL, '2024-12-09 01:30:11.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-22 14:31:04.000', 2, NULL);
+INSERT INTO `sys_read_plan` VALUES (4, '多人读书计划', '2024-12-07 03:47:57.000', NULL, '2024-12-09 01:30:15.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-21 22:31:04.000', 2, NULL);
+INSERT INTO `sys_read_plan` VALUES (5, 'test', '2024-12-07 04:01:03.000', NULL, '2024-12-09 01:30:20.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-21 22:31:04.000', 2, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role

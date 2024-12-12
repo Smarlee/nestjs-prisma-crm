@@ -33,7 +33,8 @@ export class planProgressService {
       await this.customPrisma.client.planProgress.findAndCount({
         include: {
           user: true,
-          plan: true
+          plan: true,
+          sys_book_list: true,
         },
         where: {
           planId,
@@ -44,10 +45,11 @@ export class planProgressService {
           // },
         },
       });
-    const newrows = rows.map((item) => {
-      return Object.assign({}, item,);
+    const bookLists = await this.customPrisma.client.sysBookList.findMany({})
+    const newrows = rows.map((progress, index) => {
+      return Object.assign({}, progress,);
     });
-    return { total, rows: newrows };
+    return { total, rows: newrows, bookLists };
   }
 
   async generateProgressReports(): Promise<void> {
