@@ -354,7 +354,7 @@ export class JobService {
       });
       console.log('users', users)
       for (const user of users) {
-        await this.updateProgress(plan.planId, user.userId, 100, true, dayjs().format());
+        await this.updateProgress(plan.planId, user.userId, 0, true, dayjs().format());
       }
 
     }

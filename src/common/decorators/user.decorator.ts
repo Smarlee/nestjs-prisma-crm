@@ -21,7 +21,7 @@ export enum UserEnum {
   'dataScope' = 'dataScope',
 }
 
-// 设置在参数中 获取 哪些用户信息
+// 设置在参数中 获取 哪些用户信息  数据权限 自动获取当前用户的信息
 export const User = createParamDecorator(
   (data: UserEnum, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();

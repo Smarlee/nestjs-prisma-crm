@@ -31,7 +31,7 @@ import { CreateMessagePipe } from 'src/common/pipes/createmessage.pipe';
 import { DataObj } from 'src/common/class/data-obj.class';
 import { UpdateMessagePipe } from 'src/common/pipes/updatemessage.pipe';
 import { StringToArrPipe } from 'src/common/pipes/stringtoarr.pipe';
-
+import { User } from 'src/common/decorators/user.decorator';
 @Controller('system/planProgress')
 export class SysBookController {
   constructor(private readonly planProgressService: planProgressService) { }
@@ -54,6 +54,13 @@ export class SysBookController {
   @RequiresPermissions('system:planProgress:query')
   async list(@Query(PaginationPipe) GetPlanProgressDto: GetPlanProgressDto) {
     return await this.planProgressService.list(GetPlanProgressDto);
+  }
+
+  @Get('selflist')
+  @RequiresPermissions('system:planProgress:query')
+  // 调用装饰器 @user
+  async selflist(@Query(PaginationPipe) GetPlanProgressDto: GetPlanProgressDto, @User() currentUser: any) {
+    return await this.planProgressService.selflist(GetPlanProgressDto, currentUser);
   }
 
   // /* 通过id查询 */

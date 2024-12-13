@@ -7,7 +7,7 @@
  * @Description: 
  * 
  */
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Req } from '@nestjs/common';
 import {
   AddProgressDto,
   GetPlanProgressDto,
@@ -34,11 +34,35 @@ export class planProgressService {
         include: {
           user: true,
           plan: true,
-          sys_book_list: true,
         },
         where: {
           planId,
           userId,
+
+          // createBy: {
+          //   contains: createBy,
+          // },
+        },
+      });
+    const bookLists = await this.customPrisma.client.sysBookList.findMany({})
+    const newrows = rows.map((progress, index) => {
+      return Object.assign({}, progress,);
+    });
+    return { total, rows: newrows, bookLists };
+  }
+
+  async selflist(GetPlanProgressDto: GetPlanProgressDto, currentUser) {
+    const { planId, userId } = GetPlanProgressDto;
+    // console.log('cuser', currentUser)
+    const { total, rows } =
+      await this.customPrisma.client.planProgress.findAndCount({
+        include: {
+          user: true,
+          plan: true,
+        },
+        where: {
+          planId,
+          userId: currentUser.userId,
 
           // createBy: {
           //   contains: createBy,

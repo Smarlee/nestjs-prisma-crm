@@ -11,7 +11,7 @@
  Target Server Version : 50719
  File Encoding         : 65001
 
- Date: 12/12/2024 12:11:46
+ Date: 13/12/2024 14:51:06
 */
 
 SET NAMES utf8mb4;
@@ -73,12 +73,6 @@ CREATE TABLE `_read_plan_to_book_list`  (
 -- ----------------------------
 INSERT INTO `_read_plan_to_book_list` VALUES (1, 1);
 INSERT INTO `_read_plan_to_book_list` VALUES (2, 1);
-INSERT INTO `_read_plan_to_book_list` VALUES (3, 2);
-INSERT INTO `_read_plan_to_book_list` VALUES (4, 2);
-INSERT INTO `_read_plan_to_book_list` VALUES (3, 3);
-INSERT INTO `_read_plan_to_book_list` VALUES (4, 3);
-INSERT INTO `_read_plan_to_book_list` VALUES (1, 4);
-INSERT INTO `_read_plan_to_book_list` VALUES (2, 4);
 INSERT INTO `_read_plan_to_book_list` VALUES (1, 5);
 INSERT INTO `_read_plan_to_book_list` VALUES (2, 5);
 INSERT INTO `_read_plan_to_book_list` VALUES (3, 5);
@@ -177,15 +171,9 @@ CREATE TABLE `_sysreadplantosysuser`  (
 -- Records of _sysreadplantosysuser
 -- ----------------------------
 INSERT INTO `_sysreadplantosysuser` VALUES (1, 1);
-INSERT INTO `_sysreadplantosysuser` VALUES (5, 1);
 INSERT INTO `_sysreadplantosysuser` VALUES (1, 2);
-INSERT INTO `_sysreadplantosysuser` VALUES (3, 2);
-INSERT INTO `_sysreadplantosysuser` VALUES (4, 2);
-INSERT INTO `_sysreadplantosysuser` VALUES (5, 2);
-INSERT INTO `_sysreadplantosysuser` VALUES (2, 3);
-INSERT INTO `_sysreadplantosysuser` VALUES (3, 3);
-INSERT INTO `_sysreadplantosysuser` VALUES (4, 3);
 INSERT INTO `_sysreadplantosysuser` VALUES (5, 3);
+INSERT INTO `_sysreadplantosysuser` VALUES (5, 4);
 
 -- ----------------------------
 -- Table structure for plan_progress
@@ -207,13 +195,15 @@ CREATE TABLE `plan_progress`  (
   INDEX `plan_progress_userId_fkey`(`userId`) USING BTREE,
   CONSTRAINT `plan_progress_planId_fkey` FOREIGN KEY (`planId`) REFERENCES `sys_read_plan` (`planId`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `plan_progress_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `sys_user` (`userId`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of plan_progress
 -- ----------------------------
-INSERT INTO `plan_progress` VALUES (1, 1, 1, 100, 1, NULL, NULL, '2024-12-12 02:46:55', NULL);
-INSERT INTO `plan_progress` VALUES (2, 2, 1, 100, 1, NULL, NULL, '2024-12-12 02:46:55', NULL);
+INSERT INTO `plan_progress` VALUES (1, 1, 1, 0, 1, NULL, NULL, '2024-12-12 02:46:55', NULL);
+INSERT INTO `plan_progress` VALUES (2, 2, 1, 0, 1, NULL, NULL, '2024-12-12 02:46:55', NULL);
+INSERT INTO `plan_progress` VALUES (3, 3, 5, 0, 1, NULL, NULL, '2024-12-12 05:33:10', NULL);
+INSERT INTO `plan_progress` VALUES (4, 4, 5, 0, 1, NULL, NULL, '2024-12-12 05:33:10', NULL);
 
 -- ----------------------------
 -- Table structure for sys_book_list
@@ -415,7 +405,7 @@ CREATE TABLE `sys_job`  (
 -- ----------------------------
 -- Records of sys_job
 -- ----------------------------
-INSERT INTO `sys_job` VALUES (1, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '0/10 * * * * ?', '1', '1', '1', 'admin', '2024-05-17 14:02:53', 'admin', '2024-12-12 02:46:52', '');
+INSERT INTO `sys_job` VALUES (1, '阅读计划执行', 'DEFAULT', 'JobService.updatePlans()', '0/10 * * * * ?', '1', '1', '1', 'admin', '2024-05-17 14:02:53', 'admin', '2024-12-12 05:36:04', '');
 
 -- ----------------------------
 -- Table structure for sys_job_log
@@ -431,7 +421,7 @@ CREATE TABLE `sys_job_log`  (
   `exceptionInfo` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '',
   `createTime` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`jobLogId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_job_log
@@ -439,6 +429,23 @@ CREATE TABLE `sys_job_log`  (
 INSERT INTO `sys_job_log` VALUES (1, '测试任务', 'DEFAULT', 'JobService.demo(1,2,3,true)', '执行成功', '0', '', '2024-05-17 14:03:05');
 INSERT INTO `sys_job_log` VALUES (2, '测试任务', 'DEFAULT', 'JobService.demo(1,2,3,true)', '执行成功', '0', '', '2024-12-12 02:46:20');
 INSERT INTO `sys_job_log` VALUES (3, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 02:46:56');
+INSERT INTO `sys_job_log` VALUES (4, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:33:10');
+INSERT INTO `sys_job_log` VALUES (5, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:33:20');
+INSERT INTO `sys_job_log` VALUES (6, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:33:30');
+INSERT INTO `sys_job_log` VALUES (7, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:33:40');
+INSERT INTO `sys_job_log` VALUES (8, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:33:50');
+INSERT INTO `sys_job_log` VALUES (9, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:34:00');
+INSERT INTO `sys_job_log` VALUES (10, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:34:11');
+INSERT INTO `sys_job_log` VALUES (11, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:34:22');
+INSERT INTO `sys_job_log` VALUES (12, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:34:30');
+INSERT INTO `sys_job_log` VALUES (13, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:34:40');
+INSERT INTO `sys_job_log` VALUES (14, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:34:50');
+INSERT INTO `sys_job_log` VALUES (15, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:35:00');
+INSERT INTO `sys_job_log` VALUES (16, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:35:10');
+INSERT INTO `sys_job_log` VALUES (17, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:35:20');
+INSERT INTO `sys_job_log` VALUES (18, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:35:30');
+INSERT INTO `sys_job_log` VALUES (19, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:35:40');
+INSERT INTO `sys_job_log` VALUES (20, '测试任务', 'DEFAULT', 'JobService.updatePlans()', '执行成功', '0', '', '2024-12-12 05:35:50');
 
 -- ----------------------------
 -- Table structure for sys_login_infor
@@ -457,7 +464,7 @@ CREATE TABLE `sys_login_infor`  (
   PRIMARY KEY (`infoId`) USING BTREE,
   INDEX `idxSysLogininforLt`(`loginTime`) USING BTREE,
   INDEX `idxSysLogininforS`(`status`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_login_infor
@@ -478,6 +485,9 @@ INSERT INTO `sys_login_infor` VALUES (13, 'admin', '127.0.0.1', '内网IP', 'Chr
 INSERT INTO `sys_login_infor` VALUES (14, 'admin', '127.0.0.1', '内网IP', 'Edge124', 'Mac OS10.15.7', '0', '登录成功', '2024-05-18 02:29:45');
 INSERT INTO `sys_login_infor` VALUES (15, 'admin', '127.0.0.1', '内网IP', 'Chrome123', 'Windows10', '0', '登录成功', '2024-12-05 06:13:27');
 INSERT INTO `sys_login_infor` VALUES (16, 'admin', '127.0.0.1', '内网IP', 'Chrome123', 'Windows10', '0', '登录成功', '2024-12-09 01:27:06');
+INSERT INTO `sys_login_infor` VALUES (17, 'wanglei', '127.0.0.1', '内网IP', 'Chrome123', 'Windows10', '0', '登录成功', '2024-12-12 05:36:29');
+INSERT INTO `sys_login_infor` VALUES (18, 'yangtengyun', '127.0.0.1', '内网IP', 'Chrome123', 'Windows10', '1', '用户名或密码错误', '2024-12-13 04:12:33');
+INSERT INTO `sys_login_infor` VALUES (19, 'wanglei', '127.0.0.1', '内网IP', 'Chrome123', 'Windows10', '0', '登录成功', '2024-12-13 04:12:40');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -506,7 +516,7 @@ CREATE TABLE `sys_menu`  (
   PRIMARY KEY (`menuId`) USING BTREE,
   INDEX `sys_menu_parentId_fkey`(`parentId`) USING BTREE,
   CONSTRAINT `sys_menu_parentId_fkey` FOREIGN KEY (`parentId`) REFERENCES `sys_menu` (`menuId`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1065 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1066 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -598,6 +608,7 @@ INSERT INTO `sys_menu` VALUES (1061, '图书管理', NULL, 0, 'bookSys', NULL, N
 INSERT INTO `sys_menu` VALUES (1062, '图书库', 1061, 0, 'book', 'bookSys/book/index', NULL, '1', '0', 'C', '0', '0', NULL, '#', 'admin', '2024-12-05 06:15:41', 'admin', '2024-12-05 06:15:52', '');
 INSERT INTO `sys_menu` VALUES (1063, '阅读计划', 1061, 1, 'readPlan', 'bookSys/readPlan/index', NULL, '1', '0', 'C', '0', '0', NULL, '#', 'admin', '2024-12-05 06:16:29', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1064, '阅读计划详情', 1061, 3, 'planProgress', 'bookSys/planProgress/index', NULL, '1', '0', 'C', '0', '0', NULL, '#', 'admin', '2024-12-12 02:44:19', 'admin', '2024-12-12 02:44:49', '');
+INSERT INTO `sys_menu` VALUES (1065, '我的计划', 1061, 4, 'myplan', 'bookSys/myplan/index', NULL, '1', '0', 'C', '0', '0', NULL, '#', 'wanglei', '2024-12-13 06:49:20', '', NULL, '');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -649,7 +660,7 @@ CREATE TABLE `sys_oper_log`  (
   INDEX `idxSysOperLogBt`(`businessType`) USING BTREE,
   INDEX `idxSysOperLogOt`(`operTime`) USING BTREE,
   INDEX `idxSysOperLogS`(`status`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 70 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 76 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -723,6 +734,12 @@ INSERT INTO `sys_oper_log` VALUES (66, '图书计划', '2', 'SysBookController.u
 INSERT INTO `sys_oper_log` VALUES (67, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":500,\"msg\":\"TypeError: Cannot read properties of undefined (reading \'toString\')\"}', '1', 'TypeError: Cannot read properties of undefined (reading \'toString\')', '2024-12-12 02:49:06', 11);
 INSERT INTO `sys_oper_log` VALUES (68, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 02:50:53', 106);
 INSERT INTO `sys_oper_log` VALUES (69, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 04:09:13', 131);
+INSERT INTO `sys_oper_log` VALUES (70, '公告管理', '3', 'SysBookController.delete()', 'DELETE', 0, 'admin', '研发部门', '/system/bookPlan/2', '127.0.0.1', '内网IP', '{\"params\":{\"planIds\":\"2\"},\"query\":{},\"body\":{}}', '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 05:31:50', 155);
+INSERT INTO `sys_oper_log` VALUES (71, '公告管理', '3', 'SysBookController.delete()', 'DELETE', 0, 'admin', '研发部门', '/system/bookPlan/3', '127.0.0.1', '内网IP', '{\"params\":{\"planIds\":\"3\"},\"query\":{},\"body\":{}}', '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 05:31:52', 39);
+INSERT INTO `sys_oper_log` VALUES (72, '公告管理', '3', 'SysBookController.delete()', 'DELETE', 0, 'admin', '研发部门', '/system/bookPlan/4', '127.0.0.1', '内网IP', '{\"params\":{\"planIds\":\"4\"},\"query\":{},\"body\":{}}', '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 05:31:55', 78);
+INSERT INTO `sys_oper_log` VALUES (73, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 05:32:18', 128);
+INSERT INTO `sys_oper_log` VALUES (74, '图书计划', '2', 'SysBookController.uplate()', 'PUT', 0, 'admin', '研发部门', '/system/bookPlan', '127.0.0.1', '内网IP', NULL, '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-12 05:32:49', 142);
+INSERT INTO `sys_oper_log` VALUES (75, '菜单管理', '1', 'SysMenuController.add()', 'POST', 0, 'wanglei', '测试部门', '/system/menu', '127.0.0.1', '内网IP', '{\"params\":{},\"query\":{},\"body\":{\"parentId\":1061,\"menuName\":\"我的计划\",\"menuType\":\"C\",\"orderNum\":4,\"isFrame\":\"1\",\"isCache\":\"0\",\"visible\":\"0\",\"status\":\"0\",\"path\":\"myplan\",\"component\":\"bookSys/myplan/index\"}}', '{\"code\":200,\"msg\":\"操作成功\"}', '0', NULL, '2024-12-13 06:49:21', 234);
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -775,10 +792,7 @@ CREATE TABLE `sys_read_plan`  (
 -- Records of sys_read_plan
 -- ----------------------------
 INSERT INTO `sys_read_plan` VALUES (1, '阅读计划2-每日一读', NULL, NULL, '2024-12-12 04:09:13.000', NULL, 'admin', '2024-12-06 06:31:00.000', '2025-03-22 06:31:04.000', 1, '1,2');
-INSERT INTO `sys_read_plan` VALUES (2, '每日一读', '2024-12-05 06:36:16.000', NULL, '2024-12-09 01:28:24.000', 'admin', 'admin', '2025-01-22 14:31:04.000', '2025-04-06 08:00:00.000', 1, NULL);
-INSERT INTO `sys_read_plan` VALUES (3, 'xxxxxxxxxx', '2024-12-07 03:40:55.000', NULL, '2024-12-09 01:30:11.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-22 14:31:04.000', 2, NULL);
-INSERT INTO `sys_read_plan` VALUES (4, '多人读书计划', '2024-12-07 03:47:57.000', NULL, '2024-12-09 01:30:15.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-21 22:31:04.000', 2, NULL);
-INSERT INTO `sys_read_plan` VALUES (5, 'test', '2024-12-07 04:01:03.000', NULL, '2024-12-09 01:30:20.000', 'admin', 'admin', '2025-01-21 22:31:04.000', '2025-02-21 22:31:04.000', 2, NULL);
+INSERT INTO `sys_read_plan` VALUES (5, '读四大名著', '2024-12-07 04:01:03.000', NULL, '2024-12-12 05:32:48.000', 'admin', 'admin', '2024-12-11 22:31:04.000', '2024-12-28 22:31:04.000', 2, '1,2,3,4');
 
 -- ----------------------------
 -- Table structure for sys_role
