@@ -341,7 +341,7 @@ model PlanProgress {
   updateTime    DateTime?     @db.DateTime(0)
   plan          SysReadPlan   @relation(fields: [planId], references: [planId])
   user          SysUser       @relation(fields: [userId], references: [userId])
-  sys_book_list SysBookList[] @relation("planprogresstosysbooklist")
+  // sys_book_list SysBookList[] @relation("planprogresstosysbooklist")
 
   @@unique([planId, userId])
   @@index([planId], map: "plan_progress_planId_fkey")
@@ -359,7 +359,7 @@ model SysBookList {
   createBy      String?        @db.VarChar(64)
   price         Decimal?       @db.Decimal(10, 2)
   updateBy      String?        @db.VarChar(64)
-  plan_progress PlanProgress[] @relation("planprogresstosysbooklist")
+  // plan_progress PlanProgress[] @relation("planprogresstosysbooklist")
   plans         SysReadPlan[]  @relation("read_plan_to_book_list")
 
   @@map("sys_book_list")

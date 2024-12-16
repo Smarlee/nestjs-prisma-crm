@@ -29,11 +29,11 @@ export class AddProgressDto extends DataBaseDto {
 
   @IsNumber()
   @Type()
-  userId: string;
+  userId: number;
 
   @IsNumber()
   @Type()
-  planId: string;
+  planId: number;
 
   @IsNumber()
   progress: number;
@@ -51,7 +51,7 @@ export class AddProgressDto extends DataBaseDto {
 }
 
 /* 编辑 */
-export class UpdateSysNoticeDto extends AddProgressDto {
+export class UpdateProgressDto extends AddProgressDto {
   @IsNumber()
   progressId: number;
 }

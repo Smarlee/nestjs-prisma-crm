@@ -22,7 +22,7 @@ import { PaginationPipe } from 'src/common/pipes/pagination.pipe';
 import {
   AddProgressDto,
   GetPlanProgressDto,
-  UpdateSysNoticeDto,
+  UpdateProgressDto,
 } from './dto/req-plan-progress.dto';
 import { planProgressService } from './plan-progress.service';
 import { BusinessTypeEnum, Log } from 'src/common/decorators/log.decorator';
@@ -71,20 +71,20 @@ export class SysBookController {
   //   return DataObj.create(notice);
   // }
 
-  // // /* 更新 */
-  // @Put()
-  // @RepeatSubmit()
-  // @RequiresPermissions('system:bookList:edit')
-  // @Log({
-  //   title: '图书管理',
-  //   businessType: BusinessTypeEnum.update,
-  //   isSaveRequestData: false,
-  // })
-  // async uplate(
-  //   @Body(UpdateMessagePipe) updateSysNoticeDto: UpdateSysNoticeDto,
-  // ) {
-  //   await this.planProgressService.update(updateSysNoticeDto);
-  // }
+  // /* 更新 */
+  @Put()
+  @RepeatSubmit()
+  @RequiresPermissions('system:planProgress:edit')
+  @Log({
+    title: '图书管理',
+    businessType: BusinessTypeEnum.update,
+    isSaveRequestData: false,
+  })
+  async uplate(
+    @Body(UpdateMessagePipe) UpdateProgressDto: UpdateProgressDto,
+  ) {
+    await this.planProgressService.update(UpdateProgressDto);
+  }
 
   // /* 删除 */
   // @Delete(':bookIds')

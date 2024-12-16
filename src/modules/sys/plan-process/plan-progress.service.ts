@@ -11,7 +11,7 @@ import { Inject, Injectable, Req } from '@nestjs/common';
 import {
   AddProgressDto,
   GetPlanProgressDto,
-  UpdateSysNoticeDto,
+  UpdateProgressDto,
 } from './dto/req-plan-progress.dto';
 import { CustomPrismaService, PrismaService } from 'nestjs-prisma';
 import { ExtendedPrismaClient } from 'src/shared/prisma/prisma.extension';
@@ -119,6 +119,27 @@ export class planProgressService {
   }
 
 
+  // /* 更新 */
+  async update(UpdateProgressDto: UpdateProgressDto) {
+    return await this.prisma.$transaction(async (prisma) => {
+      const { progressId } = UpdateProgressDto;
+      const notice = await prisma.planProgress.findUnique({
+        where: {
+          progressId,
+        },
+      });
+      if (!notice) throw new ApiException('该记录不存在，请重新查询后操作。');
+      const data = Object.assign({}, UpdateProgressDto
+
+      );
+      return await prisma.planProgress.update({
+        data,
+        where: {
+          progressId,
+        },
+      });
+    });
+  }
 
   /* 删除公告 */
   // async delete (progressIdArr: number[]) {
