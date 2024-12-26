@@ -16,6 +16,7 @@ import {
   Post,
   Put,
   Query,
+  StreamableFile
 } from '@nestjs/common';
 import { RequiresPermissions } from 'src/common/decorators/requires-permissions.decorator';
 import { PaginationPipe } from 'src/common/pipes/pagination.pipe';
@@ -32,9 +33,17 @@ import { DataObj } from 'src/common/class/data-obj.class';
 import { UpdateMessagePipe } from 'src/common/pipes/updatemessage.pipe';
 import { StringToArrPipe } from 'src/common/pipes/stringtoarr.pipe';
 
+import { Keep } from 'src/common/decorators/keep.decorator';
+import { ExcelService } from 'src/modules/common/excel/excel.service';
+import { ExportSysBookDto } from './dto/res-sys-book.dto';
+
 @Controller('system/bookList')
 export class SysBookController {
-  constructor(private readonly SysBookService: SysBookService) { }
+
+  constructor(
+    private readonly SysBookService: SysBookService,
+    private readonly excelService: ExcelService,
+  ) { }
 
   /* 新增 */
   @Post()
@@ -91,4 +100,20 @@ export class SysBookController {
   ) {
     await this.SysBookService.delete(bookIdArr);
   }
+
+  /* 导出 */
+  @RepeatSubmit()
+  @Post('export')
+  @RequiresPermissions('system:bookList:export')
+  @Log({
+    title: '图书管理',
+  })
+  @Keep()
+  async export(@Body() GetSysBookListDto: GetSysBookListDto) {
+    const { rows } = await this.SysBookService.list(GetSysBookListDto);
+    const file = await this.excelService.export(ExportSysBookDto, rows);
+    return new StreamableFile(file);
+  }
+
+
 }
