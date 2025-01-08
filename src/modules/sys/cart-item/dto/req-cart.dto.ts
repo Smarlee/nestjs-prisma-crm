@@ -13,7 +13,7 @@ import { DataBaseDto } from 'src/common/dto/data-base.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 /* 分页查询 */
-export class GetPlanProgressDto extends PaginationDto {
+export class GetCartDto extends PaginationDto {
   /* 广告标题 */
   @IsOptional()
   @IsNumber()
@@ -21,11 +21,11 @@ export class GetPlanProgressDto extends PaginationDto {
 
   @IsOptional()
   @IsNumber()
-  planId: number;
+  bookId: number;
 }
 
 /* 新增 */
-export class AddProgressDto extends DataBaseDto {
+export class AddCartDto extends DataBaseDto {
 
   @IsNumber()
   @Type()
@@ -33,25 +33,18 @@ export class AddProgressDto extends DataBaseDto {
 
   @IsNumber()
   @Type()
-  planId: number;
+  bookId: number;
 
   @IsNumber()
-  progress: number;
+  quantity: number;
 
-  @IsOptional()
-  @IsBoolean()
-  completed?: boolean;
 
-  // @IsOptional()
-  // @IsString()
-  // noticeContent: string;
 
-  // @IsString()
-  // status: string;
+
 }
 
 /* 编辑 */
-export class UpdateProgressDto extends AddProgressDto {
+export class UpdateCartDto extends AddCartDto {
   @IsNumber()
-  progressId: number;
+  id: number;
 }

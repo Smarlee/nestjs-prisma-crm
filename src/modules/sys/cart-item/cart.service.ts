@@ -20,10 +20,13 @@ export class CartService {
     return this.SysUserService.addCartItem(userId, bookId, quantity);
   }
 
-  async addBooksToCart(userId: number, books: { bookId: number; quantity: number }[]) {
-    const cartItems = [];
+  async addBooksToCart(userId: number, books: { bookId: number; quantity: number, Database: DataBaseDto }[],) {
 
-    for (const { bookId, quantity } of books) {
+    const cartItems = [];
+    let { createBy, createTime } = books
+
+
+    for (const { bookId, quantity, Database } of books) {
       const existingItem = await this.prisma.cartItem.findFirst({
         where: { userId, bookId },
       });
@@ -36,9 +39,10 @@ export class CartService {
         });
         cartItems.push({ ...existingItem, quantity: existingItem.quantity + quantity });
       } else {
+        // const data = Object.assign({}, addSysNoticeDto,);
         // 创建新的购物车项
         const newItem = await this.prisma.cartItem.create({
-          data: { userId, bookId, quantity },
+          data: Object.assign({ userId, bookId, quantity, createBy, createTime })  
         });
         cartItems.push(newItem);
       }

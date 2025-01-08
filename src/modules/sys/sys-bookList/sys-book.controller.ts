@@ -85,6 +85,7 @@ export class SysBookController {
   async uplate(
     @Body(UpdateMessagePipe) updateSysNoticeDto: UpdateSysNoticeDto,
   ) {
+    console.log('updateSysbooksDto', updateSysNoticeDto)
     await this.SysBookService.update(updateSysNoticeDto);
   }
 
