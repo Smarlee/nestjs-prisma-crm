@@ -8,5 +8,6 @@ import { LoginModule } from 'src/modules/login/login.module';
   imports: [UploadModule, LoginModule],
   controllers: [SysUserController],
   providers: [SysUserService],
+  exports: [SysUserService],
 })
 export class SysUserModule {}

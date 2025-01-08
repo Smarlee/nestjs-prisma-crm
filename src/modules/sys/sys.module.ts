@@ -21,6 +21,7 @@ import { SysWebModule } from './sys-web/sys-web.module';
 import { SysBookModule } from './sys-bookList/sys-book.module';
 import { SysPlanModule } from './sys-read-plan/sys-plan.module';
 import { planProgressModule } from './plan-process/plan-progress.module';
+import { CartModule } from './cart-item/cart.module'
 @Module({
   imports: [
     SysUserModule,
@@ -35,7 +36,8 @@ import { planProgressModule } from './plan-process/plan-progress.module';
     SysWebModule,
     SysBookModule,
     SysPlanModule,
-    planProgressModule
+    planProgressModule,
+    CartModule
   ],
 })
 export class SysModule {}

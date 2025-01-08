@@ -370,7 +370,7 @@ export class JobService {
         },
 
       },
-      update: { progress, completed },
+      update: { completed }, //如果找到了匹配的记录，则更新该记录的   completed  不更新其他信息
       create: { planId, userId, progress, completed, createTime },
     });
   }

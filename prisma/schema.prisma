@@ -299,6 +299,7 @@ model SysUser {
   updateTime    DateTime?      @db.DateTime(0)
   userName      String         @unique @db.VarChar(30)
   userType      String?        @default("00") @db.VarChar(2)
+  cartItems     CartItem[]
   progresses    PlanProgress[]
   dept          SysDept?       @relation(fields: [deptId], references: [deptId])
   posts         SysPost[]      @relation("sys_post_to_sys_user")
@@ -360,8 +361,34 @@ model SysBookList {
   price         Decimal?       @db.Decimal(10, 2)
   updateBy      String?        @db.VarChar(64)
   bookPic       String?        @db.VarChar(255)
+  cartItems     CartItem[]
   plan_progress PlanProgress[] @relation("planprogresstosysbooklist")
   plans         SysReadPlan[]  @relation("read_plan_to_book_list")
 
   @@map("sys_book_list")
+}
+
+model CartItem {
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  bookId        Int
+  quantity      Int           @default(1)
+  paymentStatus PaymentStatus @default(PENDING)
+  createTime    DateTime?     @db.DateTime(0)
+  updateTime    DateTime?     @db.DateTime(0)
+  createBy      String?       @db.VarChar(64)
+  updateBy      String?       @db.VarChar(64)
+  remark        String?       @db.VarChar(500)
+  book          SysBookList   @relation(fields: [bookId], references: [bookId])
+  user          SysUser       @relation(fields: [userId], references: [userId])
+
+  @@index([bookId], map: "cart_item_bookId_fkey")
+  @@index([userId], map: "cart_item_userId_fkey")
+  @@map("cart_item")
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
 }

@@ -383,4 +383,36 @@ export class SysUserService {
     });
     return await this.loginService.getInfo(userId);
   }
+
+  // 图书购物车模块
+  async addCartItem(userId: number, bookId: number, quantity: number = 1) {
+    const existingItem = await this.prisma.cartItem.findFirst({
+      where: { userId, bookId },
+    });
+
+    if (existingItem) {
+      return this.prisma.cartItem.update({
+        where: { id: existingItem.id },
+        data: { quantity: existingItem.quantity + quantity },
+      });
+    } else {
+      return this.prisma.cartItem.create({
+        data: { userId, bookId, quantity },
+      });
+    }
+  }
+
+  async getCartItems(userId: number) {
+    return this.prisma.cartItem.findMany({ where: { userId }, include: { book: true } });
+  }
+
+  //更新购买状态
+  async updatePaymentStatus(cartItemId: number, status: 'PAID' | 'CANCELLED') {
+    return this.prisma.cartItem.update({
+      where: { id: cartItemId },
+      data: { paymentStatus: status },
+    });
+  }
+
+
 }
