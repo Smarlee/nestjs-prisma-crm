@@ -66,4 +66,20 @@ export class CartService {
 
     return this.SysUserService.updatePaymentStatus(cartItemId, status);
   }
+
+
+  /* 删除公告 */
+  async delete(cartIdArr: number[]) {
+    await this.prisma.cartItem.deleteMany({
+      where: {
+        id: {
+          in: cartIdArr,
+        },
+      },
+    });
+  }
+
+
+
+
 }

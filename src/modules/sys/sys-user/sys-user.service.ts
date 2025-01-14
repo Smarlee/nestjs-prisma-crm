@@ -403,7 +403,7 @@ export class SysUserService {
   }
 
   async getCartItems(userId: number) {
-    return this.prisma.cartItem.findMany({ where: { userId }, include: { book: true } });
+    return this.prisma.cartItem.findMany({ where: { userId }, include: { book: true, user: true } });
   }
 
   //更新购买状态
